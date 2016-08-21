@@ -1,11 +1,12 @@
-DEFAULT private void Start() Start is called just before any of the Update methods is called the first time.
-DEFAULT private void Update() Update is called every frame, if the MonoBehaviour is enabled.
+DEFAULT private void Awake() Awake is called when the object first becomes enabled and active.
+private void Start() Start is called just before any of the Update methods is called the first time.
+private void Update() Update is called every frame, if the MonoBehaviour is enabled.
 private void LateUpdate() LateUpdate is called every frame, if the Behaviour is enabled.
 private void FixedUpdate() This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
 private void OnGUI() OnGUI is called for rendering and handling GUI events.
 private void OnEnable() This function is called when the object becomes enabled and active.
 private void OnDisable() This function is called when the behaviour becomes disabled () or inactive.
-private void OnDestroy() This function is called when the MonoBehaviour will be destroyed.
+DEFAULT private void OnDestroy() This function is called when the MonoBehaviour will be destroyed.
 private void Reset() Reset to default values.
 HEADER Physics
 private void OnTriggerEnter(Collider other) OnTriggerEnter is called when the Collider other enters the trigger.
