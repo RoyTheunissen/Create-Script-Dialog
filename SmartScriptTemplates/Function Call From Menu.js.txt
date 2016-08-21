@@ -1,0 +1,18 @@
+BASECLASS=MenuItem
+class $ClassName {
+	
+	// Add menu item to the menu.
+	@MenuItem ("GameObject/$NicifiedClassName")
+	static function $ClassNameFunction () {
+		
+	}
+	
+	// Validate the menu item.
+	// The item will be disabled if this function returns false.
+	@MenuItem ("GameObject/$NicifiedClassName", true)
+	static function Validate$ClassNameFunction () : boolean {
+		return true;
+	}
+		
+	$Functions
+}

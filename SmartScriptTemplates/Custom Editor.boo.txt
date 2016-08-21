@@ -1,0 +1,10 @@
+BASECLASS=Editor
+import UnityEngine
+import UnityEditor
+import System.Collections
+import System.Collections.Generic
+
+[CustomEditor ($TargetClassName)]
+class $ClassName (Editor):
+	
+	$Functions

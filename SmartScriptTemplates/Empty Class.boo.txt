@@ -1,0 +1,7 @@
+import UnityEngine
+import System.Collections
+import System.Collections.Generic
+
+class $ClassName: 
+	
+	$Functions

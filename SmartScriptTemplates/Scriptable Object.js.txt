@@ -1,0 +1,5 @@
+BASECLASS=ScriptableObject
+class $ClassName extends ScriptableObject {
+	
+	$Functions
+}

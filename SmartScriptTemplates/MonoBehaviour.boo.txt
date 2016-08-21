@@ -1,0 +1,8 @@
+BASECLASS=MonoBehaviour
+import UnityEngine
+import System.Collections
+import System.Collections.Generic
+
+class $ClassName (MonoBehaviour):
+	
+	$Functions

@@ -1,0 +1,55 @@
+DEFAULT private void Start() Start is called just before any of the Update methods is called the first time.
+DEFAULT private void Update() Update is called every frame, if the MonoBehaviour is enabled.
+private void LateUpdate() LateUpdate is called every frame, if the Behaviour is enabled.
+private void FixedUpdate() This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+private void OnGUI() OnGUI is called for rendering and handling GUI events.
+private void OnEnable() This function is called when the object becomes enabled and active.
+private void OnDisable() This function is called when the behaviour becomes disabled () or inactive.
+private void OnDestroy() This function is called when the MonoBehaviour will be destroyed.
+private void Reset() Reset to default values.
+HEADER Physics
+private void OnTriggerEnter(Collider other) OnTriggerEnter is called when the Collider other enters the trigger.
+private void OnTriggerExit(Collider other) OnTriggerExit is called when the Collider other has stopped touching the trigger.
+private void OnTriggerStay(Collider other) OnTriggerStay is called once per frame for every Collider other that is touching the trigger.
+private void OnCollisionEnter(Collision collision) OnCollisionEnter is called when this collider/rigidbody has begun touching another rigidbody/collider.
+private void OnCollisionExit(Collision collisionInfo) OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider.
+private void OnCollisionStay(Collision collisionInfo) OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider.
+private void OnControllerColliderHit(ControllerColliderHit hit) OnControllerColliderHit is called when the controller hits a collider while performing a Move.
+private void OnJointBreak(float breakForce) Called when a joint attached to the same game object broke.
+private void OnParticleCollision(GameObject other) OnParticleCollision is called when a particle hits a collider.
+HEADER Mouse
+private void OnMouseEnter() OnMouseEnter is called when the mouse entered the GUIElement or Collider.
+private void OnMouseOver() OnMouseOver is called every frame while the mouse is over the GUIElement or Collider.
+private void OnMouseExit() OnMouseExit is called when the mouse is not any longer over the GUIElement or Collider.
+private void OnMouseDown() OnMouseDown is called when the user has pressed the mouse button while over the GUIElement or Collider.
+private void OnMouseUp() OnMouseUp is called when the user has released the mouse button.
+private void OnMouseUpAsButton() OnMouseUpAsButton is only called when the mouse is released over the same GUIElement or Collider as it was pressed.
+private void OnMouseDrag() OnMouseDrag is called when the user has clicked on a GUIElement or Collider and is still holding down the mouse.
+HEADER Playback
+private void OnLevelWasLoaded(int level) This function is called after a new level was loaded.
+private void OnApplicationFocus(bool focus) Sent to all game objects when the player gets or looses focus.
+private void OnApplicationPause(bool pause) Sent to all game objects when the player pauses.
+private void OnApplicationQuit() Sent to all game objects before the application is quit.
+HEADER Rendering
+private void OnBecameVisible() OnBecameVisible is called when the renderer became visible by any camera.
+private void OnBecameInvisible() OnBecameInvisible is called when the renderer is no longer visible by any camera.
+private void OnPreCull() OnPreCull is called before a camera culls the scene.
+private void OnPreRender() OnPreRender is called before a camera starts rendering the scene.
+private void OnPostRender() OnPostRender is called after a camera finished rendering the scene.
+private void OnRenderObject() OnRenderObject is called after camera has rendered the scene.
+private void OnWillRenderObject() OnWillRenderObject is called once for each camera if the object is visible.
+private void OnRenderImage(RenderTexture source, RenderTexture destination) OnRenderImage is called after all rendering is complete to render image
+HEADER Gizmos
+private void OnDrawGizmosSelected() Implement this OnDrawGizmosSelected if you want to draw gizmos only if the object is selected.
+private void OnDrawGizmos() Implement this OnDrawGizmos if you want to draw gizmos that are also pickable and always drawn.
+HEADER Network
+private void OnPlayerConnected(NetworkPlayer player) Called on the server whenever a new player has successfully connected.
+private void OnServerInitialized() Called on the server whenever a Network.InitializeServer was invoked and has completed.
+private void OnConnectedToServer() Called on the client when you have successfully connected to a server.
+private void OnPlayerDisconnected(NetworkPlayer player) Called on the server whenever a player disconnected from the server.
+private void OnDisconnectedFromServer(NetworkDisconnection info) Called on the client when the connection was lost or you disconnected from the server.
+private void OnFailedToConnect(NetworkConnectionError error) Called on the client when a connection attempt fails for some reason.
+private void OnFailedToConnectToMasterServer(NetworkConnectionError info) Called on clients or servers when there is a problem connecting to the MasterServer.
+private void OnMasterServerEvent(MasterServerEvent msEvent) Called on clients or servers when reporting events from the MasterServer. 
+private void OnNetworkInstantiate(NetworkMessageInfo info) Called on objects which have been network instantiated with Network.Instantiate
+private void OnSerializeNetworkView(BitStream stream, NetworkMessageInfo info) Used to customize synchronization of variables in a script watched by a network view.

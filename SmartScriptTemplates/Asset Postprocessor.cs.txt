@@ -1,0 +1,14 @@
+BASECLASS=AssetPostprocessor
+using UnityEngine;
+using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
+
+$Namespace
+{
+    $ClassSummary
+    public class $ClassName : AssetPostprocessor 
+    {
+        $Functions
+    }
+}

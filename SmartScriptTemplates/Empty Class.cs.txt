@@ -1,0 +1,17 @@
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+$Namespace
+{
+    $ClassSummary
+    public class $ClassName 
+    {
+        public $ClassName()
+        {
+        
+        }
+    
+        $Functions
+    }
+}

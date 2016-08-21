@@ -1,0 +1,13 @@
+BASECLASS=ScriptableObject
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+$Namespace
+{
+    $ClassSummary
+    public class $ClassName : ScriptableObject 
+    {
+        $Functions
+    }
+}

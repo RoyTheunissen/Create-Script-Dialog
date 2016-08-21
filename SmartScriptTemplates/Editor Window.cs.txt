@@ -1,0 +1,20 @@
+BASECLASS=EditorWindow
+using UnityEngine;
+using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
+
+$Namespace
+{
+    $ClassSummary
+    public class $ClassName : EditorWindow 
+    {
+        [MenuItem ("Window/$NicifiedClassName")]
+        public static void Init() 
+        {
+            EditorWindow.GetWindow<$ClassName>(false, "$NicifiedClassName");
+        }
+    
+        $Functions
+    }
+}

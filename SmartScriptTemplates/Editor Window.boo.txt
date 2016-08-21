@@ -1,0 +1,15 @@
+BASECLASS=EditorWindow
+import UnityEngine
+import UnityEditor
+import System.Collections
+import System.Collections.Generic
+
+class $ClassName (EditorWindow):
+	
+	// Add menu item to the Window menu
+	[MenuItem ("Window/$NicifiedClassName")]
+	static def Init ():
+		// Get existing open window or if none, make a new one:
+		EditorWindow.GetWindow[of $ClassName] (false, "$NicifiedClassName");
+	
+	$Functions

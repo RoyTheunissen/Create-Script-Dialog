@@ -1,0 +1,13 @@
+DEFAULT private void OnWizardCreate() This is called when the user clicks on the Create button.
+DEFAULT private void OnWizardOtherButton () Allows you to provide an action when the user clicks on the other button.
+private void OnWizardUpdate() This is called when the wizard is opened or whenever the user changes something in the wizard.
+private void OnSelectionChange() Called whenever the selection has changed.
+private void OnHierarchyChange() Called whenever the scene hierarchy has changed.
+private void OnProjectChange() Called whenever the project has changed.
+private void OnInspectorUpdate() OnInspectorUpdate is called at 10 frames per second to give the inspector a chance to update.
+private void Update() Called 100 times per second on all visible windows.
+private void OnDrawGizmos()  Called every frame when the wizard is visible.
+private void OnEnable() This function is called when the object is loaded.
+private void OnDisable() This function is called when the scriptable object goes out of scope.
+private void OnFocus() Called when the window gets keyboard focus.
+private void OnLostFocus() Called when the window loses keyboard focus.

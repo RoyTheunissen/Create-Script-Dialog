@@ -1,0 +1,14 @@
+BASECLASS=ScriptableWizard
+import UnityEngine
+import UnityEditor
+import System.Collections
+import System.Collections.Generic
+
+class $ClassName (ScriptableWizard):
+	
+	// Add menu item to the menu.
+	[MenuItem ("GameObject/$NicifiedClassName...")]
+	static def CreateWizard ():
+		ScriptableWizard.DisplayWizard[of $ClassName] ("$NicifiedClassName", "Create", "Cancel")
+	
+	$Functions

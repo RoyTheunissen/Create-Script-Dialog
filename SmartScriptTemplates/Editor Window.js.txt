@@ -1,0 +1,12 @@
+BASECLASS=EditorWindow
+public class $ClassName extends EditorWindow {
+	
+	// Add menu item to the Window menu
+	@MenuItem ("Window/$NicifiedClassName")
+	static function Init () {
+		// Get existing open window or if none, make a new one:
+		EditorWindow.GetWindow.<$ClassName> (false, "$NicifiedClassName");
+	}
+	
+	$Functions
+}

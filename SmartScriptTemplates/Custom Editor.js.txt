@@ -1,0 +1,6 @@
+BASECLASS=Editor
+@CustomEditor ($TargetClassName)
+class $ClassName extends Editor {
+	
+	$Functions
+}

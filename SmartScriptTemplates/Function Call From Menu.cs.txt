@@ -1,0 +1,26 @@
+BASECLASS=MenuItem
+using UnityEditor;
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+$Namespace
+{
+    $ClassSummary
+    class $ClassName 
+    {
+        [MenuItem ("GameObject/$NicifiedClassName")]
+        public static void $ClassNameFunction() 
+        {
+        
+        }
+    
+        [MenuItem ("GameObject/$NicifiedClassName", true)]
+        public static bool Validate$ClassNameFunction() 
+        {
+            return true;
+        }
+        
+        $Functions
+    }
+}

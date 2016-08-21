@@ -1,0 +1,11 @@
+BASECLASS=ScriptableWizard
+class $ClassName extends ScriptableWizard {
+	
+	// Add menu item to the menu.
+	@MenuItem ("GameObject/$NicifiedClassName...")
+	static function CreateWizard () {
+		ScriptableWizard.DisplayWizard.<$ClassName> ("$NicifiedClassName", "Create", "Cancel");
+	}
+	
+	$Functions
+}
