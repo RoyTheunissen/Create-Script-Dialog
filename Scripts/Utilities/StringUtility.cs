@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Paladin.Framework.Utilities
 {
@@ -85,22 +84,26 @@ namespace Paladin.Framework.Utilities
                     StringSplitOptions.None).Length - 1;
         }
 
+        private static void ReplaceOccurrenceAndKeepIndentation(ref string text,
+            int oldStringIndex, string oldString, string newString)
+        {
+            // Get the level of indentation at the occurrence.
+            int indentation = GetIndentationCountAt(text, oldStringIndex);
+
+            // Remove the occurrence of the old string.
+            text = text.Remove(oldStringIndex, oldString.Length);
+
+            // Insert the new string indented in the same manner as the occurrence.
+            newString = CodeUtility.Indent(newString, indentation, true);
+            text = text.Insert(oldStringIndex, newString);
+        }
+
         public static string ReplaceAndKeepIndentation(string text, string oldString, string newString)
         {
             int oldStringIndex = text.IndexOf(oldString);
-            int indentation;
             while (oldStringIndex != -1)
             {
-                // Get the level of indentation at the occurrence.
-                indentation = GetIndentationCountAt(text, oldStringIndex);
-
-                // Remove the occurrence of the old string.
-                text = text.Remove(oldStringIndex, oldString.Length);
-
-                // Insert the new string indented in the same manner as the occurrence.
-                text = text.Insert(oldStringIndex,
-                    CodeUtility.Indent(newString, indentation, true)
-                    );
+                ReplaceOccurrenceAndKeepIndentation(ref text, oldStringIndex, oldString, newString);
 
                 // Search for the next occurrence.
                 oldStringIndex = text.IndexOf(oldString);
