@@ -1,0 +1,7 @@
+$Namespace
+{
+    public enum $ClassName 
+    {
+        
+    }
+}
