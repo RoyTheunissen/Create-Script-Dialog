@@ -858,10 +858,17 @@ public class NewScriptWindow : EditorWindow
             m_ScriptPrescription.m_ClassName);
     }
 
+    private Type GetType(string className)
+    {
+        return (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                          from type in assembly.GetTypes()
+                          where type.Name == className
+                          select type).FirstOrDefault();
+    }
+
     private bool ClassExists(string className)
     {
-        return AppDomain.CurrentDomain.GetAssemblies()
-            .Any(a => a.GetType(className, false) != null);
+        return GetType(className) != null;
     }
 
     private bool ClassAlreadyExists()
@@ -886,8 +893,10 @@ public class NewScriptWindow : EditorWindow
             return false;
         if (m_CustomEditorTargetClassName == string.Empty)
             return true;
-        return AppDomain.CurrentDomain.GetAssemblies()
-            .All(a => !typeof(UnityEngine.Object).IsAssignableFrom(a.GetType(m_CustomEditorTargetClassName, false)));
+        Type type = GetType(m_CustomEditorTargetClassName);
+        if (type == null)
+            return true;
+        return !typeof(UnityEngine.Object).IsAssignableFrom(type);
     }
 
     private string GetCreateButtonText()
