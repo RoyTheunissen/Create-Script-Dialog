@@ -134,7 +134,8 @@ namespace Paladin.Framework.Utilities
             for (int i = 0; i < programmerText.Length; i++)
             {
                 // If there was a change in caps add spaces.
-                if (char.IsUpper(programmerText[i]) != wasUpperCase
+                if ((char.IsUpper(programmerText[i]) != wasUpperCase
+                    || (wasLetter != char.IsLetter(programmerText[i])))
                     && i > 0 && !addedSpace)
                 {
                     // Upper case to lower case.
