@@ -1,4 +1,4 @@
-private void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
+private static void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromPath)
 private void OnPreprocessTexture() Add this function in a subclass to get a notification just before the texture importer is run.
 private void OnPostprocessTexture(Texture2D texture) Add this function in a subclass to get a notification when a texture has completed importing just before the texture is saved to disk.
 private void OnPreprocessModel() Add this function in a subclass to get a notification just before a model (.fbx, .mb file etc.) is being imported.

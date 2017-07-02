@@ -1,10 +1,9 @@
 $Namespace
 {
     $ClassSummary
+    [Serializable]
     public class $ClassName 
     {
-        public $ClassName() {}
-    
         $Functions
     }
 }

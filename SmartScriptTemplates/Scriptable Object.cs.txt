@@ -6,6 +6,7 @@ using System.Collections.Generic;
 $Namespace
 {
     $ClassSummary
+    [CreateAssetMenu(fileName = "$ClassName", menuName = "ScriptableObject/$ClassName")]
     public class $ClassName : ScriptableObject 
     {
         $Functions
