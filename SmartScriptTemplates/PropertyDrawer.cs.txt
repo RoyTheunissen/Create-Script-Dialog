@@ -1,0 +1,13 @@
+BASECLASS=PropertyDrawer
+using UnityEditor;
+using UnityEngine;
+
+$Namespace
+{
+    $ClassSummary
+    [CustomPropertyDrawer(typeof($ClassName))]
+    public class $ClassName : PropertyDrawer
+    {
+        $Functions
+    }
+}

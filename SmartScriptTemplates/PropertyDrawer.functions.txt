@@ -1,0 +1,1 @@
+DEFAULT public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) Implement this function to draw a pure C# object in a nice way.
