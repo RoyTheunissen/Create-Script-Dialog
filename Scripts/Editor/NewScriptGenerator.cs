@@ -129,12 +129,8 @@ namespace UnityEditor
 				
 				if (!hasFunctions)
 				{
-					if (m_ScriptPrescription.m_Lang == Language.Boo && !m_Text.Contains ("def"))
-						// Replace $Functions keyword with "pass" if no functions in Boo
-						m_Text = m_Text.Replace (match.Value, m_Indentation + "pass");
-					else
-						// Otherwise just remove $Functions keyword plus newline
-						m_Text = m_Text.Replace (match.Value + "\n", string.Empty);
+					// Otherwise just remove $Functions keyword plus newline
+					m_Text = m_Text.Replace (match.Value + "\n", string.Empty);
 				}
 			}
 			
@@ -222,30 +218,6 @@ namespace UnityEditor
 			
 			switch (m_ScriptPrescription.m_Lang)
 			{
-			    case Language.JavaScript:
-				    // Comment
-				    WriteComment (function.comment);
-				
-				    // Function header
-				    for (int i=0; i<function.parameters.Length; i++)
-				    {
-					    paramString += function.parameters[i].name + " : " + TranslateTypeToJavascript (function.parameters[i].type);
-					    if (i < function.parameters.Length-1)
-						    paramString += ", ";
-				    }
-				    overrideString = (function.isVirtual ? "override " : string.Empty);
-				    returnTypeString = (function.returnType == null ? " " : " : " + TranslateTypeToJavascript (function.returnType) + " ");
-				    m_Writer.WriteLine (m_Indentation + function.scope + overrideString + "function " + function.name + " (" + paramString + ")" + returnTypeString + "{");
-				
-				    // Function content
-				    IndentLevel++;
-				    functionContentString = (function.returnType == null ? string.Empty : function.returnDefault + ";");
-				    m_Writer.WriteLine (m_Indentation + functionContentString);
-				    IndentLevel--;
-				    m_Writer.WriteLine (m_Indentation + "}");
-				
-				    break;
-				
 			    case Language.CSharp:
 				    // Comment
                     if (!String.IsNullOrEmpty(function.comment))
@@ -269,29 +241,6 @@ namespace UnityEditor
 				    m_Writer.WriteLine (m_Indentation + functionContentString);
 				    IndentLevel--;
 				    m_Writer.WriteLine (m_Indentation + "}");
-				
-				    break;
-				
-			    case Language.Boo:
-				    // Comment
-				    WriteComment (function.comment);
-				
-				    // Function header
-				    for (int i=0; i<function.parameters.Length; i++)
-				    {
-					    paramString += function.parameters[i].name + " as " + TranslateTypeToBoo (function.parameters[i].type);
-					    if (i < function.parameters.Length-1)
-						    paramString += ", ";
-				    }
-				    overrideString = (function.isVirtual ? "override " : string.Empty);
-				    returnTypeString = (function.returnType == null ? string.Empty : " as " + TranslateTypeToJavascript (function.returnType));
-                    m_Writer.WriteLine(m_Indentation + function.scope + overrideString + "def " + function.name + " (" + paramString + ")" + returnTypeString + ":");
-				
-				    // Function content
-				    IndentLevel++;
-				    functionContentString = (function.returnType == null ? "pass" : function.returnDefault);
-				    m_Writer.WriteLine (m_Indentation + functionContentString);
-				    IndentLevel--;
 				
 				    break;
 			}

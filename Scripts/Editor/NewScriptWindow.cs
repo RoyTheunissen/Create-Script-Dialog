@@ -364,17 +364,7 @@ public class NewScriptWindow : EditorWindow
     {
         get
         {
-            switch (m_ScriptPrescription.m_Lang)
-            {
-                case Language.CSharp:
-                    return "cs";
-                case Language.JavaScript:
-                    return "js";
-                case Language.Boo:
-                    return "boo";
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            return "cs";
         }
     }
 

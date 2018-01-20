@@ -21,9 +21,7 @@ namespace UnityEditor
 	
 	internal enum Language
 	{
-		JavaScript = 0,
-		CSharp = 1,
-		Boo = 2
+		CSharp = 1
 	}
 
 	internal struct FunctionData
