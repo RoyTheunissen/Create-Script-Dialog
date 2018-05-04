@@ -460,10 +460,7 @@ public class NewScriptWindow : EditorWindow
     {
         return m_ScriptPrescription.m_ClassName.Length > 0 &&
             !File.Exists(TargetPath()) &&
-            !ClassAlreadyExists() &&
             !ClassNameIsInvalid() &&
-            !TargetClassDoesNotExist() &&
-            !TargetClassIsNotValidType() &&
             !InvalidTargetPath() &&
             !InvalidTargetPathForEditorScript();
     }
@@ -492,15 +489,8 @@ public class NewScriptWindow : EditorWindow
         {
             if (File.Exists(TargetPath()))
                 blockReason = "A script called \"" + m_ScriptPrescription.m_ClassName + "\" already exists at that path.";
-            else if (ClassAlreadyExists())
-                blockReason = "A class called \"" + m_ScriptPrescription.m_ClassName + "\" already exists.";
             else if (ClassNameIsInvalid())
                 blockReason = "The script name may only consist of a-z, A-Z, 0-9, _.";
-            else if (TargetClassDoesNotExist())
-                if (m_CustomEditorTargetClassName == string.Empty)
-                    blockReason = "Fill in the script component to make an editor for.";
-                else
-                    blockReason = "A class called \"" + m_CustomEditorTargetClassName + "\" could not be found.";
             else if (TargetClassIsNotValidType())
                 blockReason = "The class \"" + m_CustomEditorTargetClassName + "\" is not of type UnityEngine.Object.";
             else if (InvalidTargetPath())
