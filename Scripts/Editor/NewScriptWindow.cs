@@ -368,18 +368,6 @@ public class NewScriptWindow : EditorWindow
         }
     }
 
-    [MenuItem("Component/Scripts/New Script...", false, 50)]
-    private static void OpenFromComponentMenu()
-    {
-        Init();
-    }
-
-    [MenuItem("Component/Scripts/New Script...", true, 50)]
-    private static bool OpenFromComponentMenuValidation()
-    {
-        return (Selection.activeObject is GameObject);
-    }
-
     [MenuItem("Assets/Create/Script...", false, 50)]
     private static void OpenFromAssetsMenu()
     {
@@ -543,7 +531,6 @@ public class NewScriptWindow : EditorWindow
             GUILayout.BeginHorizontal();
             {
                 NameGUI();
-                LanguageGUI();
             }
             GUILayout.EndHorizontal();
 
@@ -735,19 +722,6 @@ public class NewScriptWindow : EditorWindow
             m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
         }
         EditorGUILayout.EndHorizontal();
-    }
-
-    private void LanguageGUI()
-    {
-        var langNew = (Language)EditorGUILayout.EnumPopup(m_ScriptPrescription.m_Lang, GUILayout.Width(80));
-
-        if (langNew != m_ScriptPrescription.m_Lang)
-        {
-            m_ScriptPrescription.m_Lang = langNew;
-            EditorPrefs.SetInt(kLanguageEditorPrefName, (int)langNew);
-            UpdateTemplateNamesAndTemplate();
-            AutomaticHandlingOnChangeTemplate();
-        }
     }
 
     private void PreviewGUI()
