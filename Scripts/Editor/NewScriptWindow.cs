@@ -360,13 +360,7 @@ public class NewScriptWindow : EditorWindow
         return templates.ToArray();
     }
 
-    private string extension
-    {
-        get
-        {
-            return "cs";
-        }
-    }
+    private string extension => "cs";
 
     [MenuItem("Assets/Create/Script...", false, 50)]
     private static void OpenFromAssetsMenu()
