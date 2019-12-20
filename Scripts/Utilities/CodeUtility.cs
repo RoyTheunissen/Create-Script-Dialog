@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Paladin.Framework.Utilities
+namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
     public static class CodeUtility
     {

@@ -1,9 +1,9 @@
-using Paladin.Framework.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using RoyTheunissen.CreateScriptDialog.Utilities;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -866,8 +866,7 @@ public class NewScriptWindow : EditorWindow
 
     private void UpdateNamespace()
     {
-        m_ScriptPrescription.m_NamespaceBody =
-                NamespaceUtility.GetNamespaceForPath(m_Directory, false);
+        m_ScriptPrescription.m_NamespaceBody = NamespaceUtility.GetNamespaceForPath(m_Directory, false);
     }
 
     private void OnSelectionChange()

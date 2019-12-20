@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Paladin.Framework.Utilities
+namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
     public static class NamespaceUtility
     {
@@ -129,6 +129,7 @@ namespace Paladin.Framework.Utilities
 
             // Remove spaces too!
             path = path.Replace(" ", "");
+            
             return path;
         }
     }

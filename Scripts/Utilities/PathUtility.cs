@@ -1,6 +1,6 @@
 using System;
 
-namespace Paladin.Framework.Utilities
+namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
     public static class PathUtility
     {

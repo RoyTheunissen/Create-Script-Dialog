@@ -1,11 +1,9 @@
 using System;
-using UnityEngine;
 using System.Linq;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
-using Object = UnityEngine.Object;
-using Paladin.Framework.Utilities;
+using RoyTheunissen.CreateScriptDialog.Utilities;
 
 namespace UnityEditor
 {
