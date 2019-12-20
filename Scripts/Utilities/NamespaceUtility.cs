@@ -127,8 +127,10 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             path = path.Replace(PathUtility.FolderSymbol, SubNamespaceSymbol);
             path = path.Replace(PathUtility.AlternateFolderSymbol, SubNamespaceSymbol);
 
-            // Remove spaces too!
+            // Remove separators too!
             path = path.Replace(" ", "");
+            path = path.Replace("-", "");
+            path = path.Replace("_", "");
             
             return path;
         }
