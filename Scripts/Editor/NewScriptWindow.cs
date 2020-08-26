@@ -705,12 +705,10 @@ public class NewScriptWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Namespace", GUILayout.Width(kLabelWidth - 4));
-            string newPrefix = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespacePrefix, GUILayout.Width(80));
+            string newPrefix = NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
+            EditorGUILayout.LabelField(newPrefix, GUILayout.Width(90));
             if (newPrefix != m_ScriptPrescription.m_NamespacePrefix)
-            {
-                EditorPrefs.SetString(kNamespacePrefixPrefName, newPrefix);
                 m_ScriptPrescription.m_NamespacePrefix = newPrefix;
-            }
 
             EditorGUILayout.LabelField(".", GUILayout.Width(7));
             m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
