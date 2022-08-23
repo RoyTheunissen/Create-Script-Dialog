@@ -1,0 +1,18 @@
+{
+    "name": "CreateScriptDialog.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2741bdb3b3202e946b1704f9e26498b8"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
