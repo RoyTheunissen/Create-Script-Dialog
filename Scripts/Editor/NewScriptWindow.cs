@@ -18,6 +18,8 @@ public class NewScriptWindow : EditorWindow
     private const string kResourcesTemplatePath = "Resources/" + kTemplateFolderName;
     private const string kMonoBehaviourName = "MonoBehaviour";
     private const string kPlainClassName = "Class";
+    private const string kDefaultCustomEditorForMonoBehaviours = "Custom Editor";
+    private const string kDefaultCustomEditorForClasses = "PropertyDrawer";
     private static readonly string[] kCustomEditorClassNames = { "Editor", "PropertyDrawer" };
     private const string kTempEditorClassPrefix = "E:";
     private const string kNoTemplateString = "No Template Found";
@@ -59,6 +61,8 @@ public class NewScriptWindow : EditorWindow
     }
     private static Styles m_Styles;
     
+    private bool isInitialOpen;
+    
     [NonSerialized] private static string cachedTemplatePath;
     [NonSerialized] private static bool didCacheTemplatePath;
     private static string TemplatePath
@@ -93,6 +97,12 @@ public class NewScriptWindow : EditorWindow
         string projectPath = StringUtility.GetParentDirectory(Application.dataPath);
         string relativeTemplatePath = TemplatePath;
         return StringUtility.ToUnityPath(Path.Combine(projectPath, relativeTemplatePath));
+    }
+
+    private void SetTemplate(string name)
+    {
+        m_TemplateIndex = m_TemplateNames.ToList().IndexOf(name);
+        AutomaticHandlingOnChangeTemplate();
     }
 
     private void UpdateTemplateNamesAndTemplate()
@@ -132,6 +142,8 @@ public class NewScriptWindow : EditorWindow
 
     private void AutomaticHandlingOnChangeTemplate()
     {
+        UpdateTemplateNamesAndTemplate();
+        
         // Add or remove "Editor" from directory path
         if (m_IsEditorClass)
         {
@@ -146,6 +158,8 @@ public class NewScriptWindow : EditorWindow
         // Move keyboard focus to relevant field
         if (m_IsCustomEditor)
             m_FocusTextFieldNow = true;
+        
+        SetClassNameBasedOnTargetClassName();
     }
 
     private string GetBaseClass(string templateContent)
@@ -414,7 +428,10 @@ public class NewScriptWindow : EditorWindow
         m_ScriptPrescription.m_Lang = (Language)EditorPrefs.GetInt(kLanguageEditorPrefName, 0);
         m_ScriptPrescription.m_NamespacePrefix = EditorPrefs.GetString(kNamespacePrefixPrefName, string.Empty);
         UpdateTemplateNamesAndTemplate();
+
+        isInitialOpen = true;
         OnSelectionChange();
+        isInitialOpen = false;
     }
 
     private void OnGUI()
@@ -704,9 +721,7 @@ public class NewScriptWindow : EditorWindow
         if (templateIndexNew != m_TemplateIndex)
         {
             m_TemplateIndex = templateIndexNew;
-            UpdateTemplateNamesAndTemplate();
             AutomaticHandlingOnChangeTemplate();
-            SetClassNameBasedOnTargetClassName();
         }
     }
 
@@ -897,25 +912,36 @@ public class NewScriptWindow : EditorWindow
 
         if (Selection.activeObject == null)
             return;
-
+        
         if (IsFolder(Selection.activeObject))
         {
             m_Directory = AssetPathWithoutAssetPrefix(Selection.activeObject);
             if (m_IsEditorClass && InvalidTargetPathForEditorScript())
-            {
                 m_Directory = Path.Combine(m_Directory, "Editor");
+        }
+        else
+        {
+            m_Directory = Path.GetDirectoryName(AssetPathWithoutAssetPrefix(Selection.activeObject));
+            if (Selection.activeGameObject != null)
+                m_GameObjectToAddTo = Selection.activeGameObject;
+            bool isScript = Selection.activeObject is MonoScript;
+            MonoScript script = Selection.activeObject as MonoScript;
+            
+            // If you open the dialog with a MonoBehaviour selected, default to the custom editor.
+            if (isInitialOpen && isScript)
+            {
+                bool isMonoBehaviour = typeof(MonoBehaviour).IsAssignableFrom(script.GetClass());
+                SetTemplate(isMonoBehaviour ? kDefaultCustomEditorForMonoBehaviours : kDefaultCustomEditorForClasses);
             }
-            UpdateNamespace();
+            
+            if (m_IsCustomEditor && isScript)
+            {
+                m_CustomEditorTargetClassName = Selection.activeObject.name;
+                SetClassNameBasedOnTargetClassName();
+            }
         }
-        else if (Selection.activeGameObject != null)
-        {
-            m_GameObjectToAddTo = Selection.activeGameObject;
-        }
-        else if (m_IsCustomEditor && Selection.activeObject is MonoScript)
-        {
-            m_CustomEditorTargetClassName = Selection.activeObject.name;
-            SetClassNameBasedOnTargetClassName();
-        }
+
+        UpdateNamespace();
 
         Repaint();
     }
