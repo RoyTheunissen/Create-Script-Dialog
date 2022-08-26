@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using RoyTheunissen.CreateScriptDialog.Utilities;
 using UnityEditorInternal;
 using UnityEngine;
@@ -12,6 +14,68 @@ namespace UnityEditor
     /// </summary>
     public static class AsmDefUtilities 
     {
+        private const char Separator = '.';
+        
+        [Serializable]
+        private struct AsmRef
+        {
+            public string reference;
+
+            public AsmRef(AssemblyDefinitionAsset reference)
+            {
+                string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(reference));
+                this.reference = $"GUID:{guid}";
+            }
+
+            public override string ToString()
+            {
+                return JsonUtility.ToJson(this, true);
+            }
+        }
+
+        [Serializable]
+        private struct AsmDef
+        {
+            public string name;
+            public string rootNamespace;
+            public string[] references;
+            public string[] includePlatforms;
+            public string[] excludePlatforms;
+            public bool allowUnsafeCode;
+            public bool overrideReferences;
+            public string[] precompiledReferences;
+            public bool autoReferenced;
+            public string[] defineConstraints;
+            public string[] versionDefines;
+            public bool noEngineReferences;
+
+            public AsmDef(string name, params AssemblyDefinitionAsset[] references)
+            {
+                this.name = name;
+                rootNamespace = "";
+                this.references = new string[references.Length];
+                for (int i = 0; i < references.Length; i++)
+                {
+                    string guid = AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(references[i]));
+                    this.references[i] = $"GUID:{guid}";
+                }
+                includePlatforms = new string[0];
+                excludePlatforms = new string[0];
+                allowUnsafeCode = false;
+                overrideReferences = false;
+                precompiledReferences = new string[0];
+                autoReferenced = true;
+                defineConstraints = new string[0];
+                versionDefines = new string[0];
+                noEngineReferences = false;
+            }
+
+            public override string ToString()
+            {
+                return JsonUtility.ToJson(this, true);
+            }
+        }
+        
         private static List<Object> GetSelectedEditorFolders()
         {
             List<Object> results = new List<Object>();
@@ -34,7 +98,7 @@ namespace UnityEditor
             }
         }
 
-        private static AssemblyDefinitionAsset FindParentEditorAsmDef(string path)
+        public static AssemblyDefinitionAsset GetParentEditorAsmDef(string path)
         {
             string currentFolder = path.GetParentDirectory();
 
@@ -83,9 +147,8 @@ namespace UnityEditor
             path = Path.GetRelativePath(asmDefParentDirectory, path);
 
             // The name should basically just be the folder relative to the asmdef that's referenced. 
-            const char separator = '.';
-            string asmFileName = path.Replace(Path.DirectorySeparatorChar, separator)
-                .Replace(Path.AltDirectorySeparatorChar, separator);
+            string asmFileName = path.Replace(Path.DirectorySeparatorChar, Separator)
+                .Replace(Path.AltDirectorySeparatorChar, Separator);
 
             // Sometimes people add special characters so it shows up at the top. We don't want that for our filename,
             // so strip those out. Hyphens and spaces don't look nice either.
@@ -97,52 +160,105 @@ namespace UnityEditor
             
             // Remove any script folders from the name.
             string[] scriptFolderNames = {"Scripts", "Runtime"};
-            List<string> segments = new List<string>(asmFileName.Split(separator));
+            List<string> segments = new List<string>(asmFileName.Split(Separator));
             while (segments.Count > 0 && segments[0].StartsWithAny(scriptFolderNames))
             {
                 segments.RemoveAt(0);
             }
-            asmFileName = string.Join(separator, segments);
+            asmFileName = string.Join(Separator, segments);
 
-            string fileNameBase = Path.GetFileNameWithoutExtension(asmDefPath).RemoveSuffix(separator + "Editor");
-            string fileNameFinal = fileNameBase + separator + asmFileName;
+            string fileNameBase = Path.GetFileNameWithoutExtension(asmDefPath).RemoveSuffix(Separator + "Editor");
+            string fileNameFinal = fileNameBase + Separator + asmFileName;
             return fileNameFinal;
         }
 
-        private static void CreateAsmRef(string path, AssemblyDefinitionAsset asmDef)
+        public static void CreateAsmRef(string folderPath, AssemblyDefinitionAsset asmDef)
         {
             string asmDefPath = AssetDatabase.GetAssetPath(asmDef);
-            string fileName = GetAsmRefFileName(path, asmDefPath);
-            string filePath = path.GetAbsolutePath() + Path.AltDirectorySeparatorChar + fileName + ".asmref";
-            string asmDefGuid = AssetDatabase.AssetPathToGUID(asmDefPath);
+            string fileName = GetAsmRefFileName(folderPath, asmDefPath);
+            string filePath = folderPath.GetAbsolutePath() + Path.AltDirectorySeparatorChar + fileName + ".asmref";
 
-            string text = "{\n";
-            text += $"\t\"reference\": \"GUID:{asmDefGuid}\"\n";
-            text += "}";
+            AsmRef asmRef = new AsmRef(asmDef);
             
-            File.WriteAllText(filePath, text);
+            File.WriteAllText(filePath, asmRef.ToString());
+            AssetDatabase.ImportAsset(filePath.GetProjectPath());
+        }
+
+        public static void CreateEditorFolderAsmDef(string folderName, AssemblyDefinitionAsset runtimeAsmDef)
+        {
+            string asmDefPath = AssetDatabase.GetAssetPath(runtimeAsmDef);
+            string fileName = Path.GetFileNameWithoutExtension(asmDefPath) + Separator + "Editor";
+            string filePath = folderName.GetAbsolutePath() + Path.AltDirectorySeparatorChar + fileName + ".asmdef";
+
+            AsmDef asmDef = new AsmDef(fileName, runtimeAsmDef);
+            
+            File.WriteAllText(filePath, asmDef.ToString());
             AssetDatabase.ImportAsset(filePath.GetProjectPath());
         }
 
         private static void AddAsmRefToTopLevelEditorFolder(Object selectedEditorFolder)
         {
             string path = AssetDatabase.GetAssetPath(selectedEditorFolder);
-            AssemblyDefinitionAsset editorAsmDefToReference = FindParentEditorAsmDef(path);
-            
+            AddAsmRefToTopLevelEditorFolder(path);
+        }
+
+        public static void AddAsmRefToTopLevelEditorFolder(string folderPath)
+        {
+            AssemblyDefinitionAsset editorAsmDefToReference = GetParentEditorAsmDef(folderPath);
+
             if (editorAsmDefToReference == null)
             {
-                Debug.LogWarning($"Can't create asmref for folder {path} because we can't find an editor folder asmdef.");
+                Debug.LogWarning($"Can't create asmref for folder {folderPath} because we can't find an editor folder asmdef.");
                 return;
             }
-            
-            CreateAsmRef(path, editorAsmDefToReference);
+
+            CreateAsmRef(folderPath, editorAsmDefToReference);
         }
-        
+
         [MenuItem("Assets/Create/Asm Refs To Editor Folder", true, 93)]
         public static bool AddAsmRefsToTopLevelEditorFolderValidate()
         {
             List<Object> selectedEditorFolders = GetSelectedEditorFolders();
             return selectedEditorFolders.Count > 0;
+        }
+        
+        public static  AssemblyDefinitionAsset GetAsmDefInFolder(string path)
+        {
+            string[] asmDefsGuids = AssetDatabase.FindAssets("t:asmdef", new[] { path });
+            for (int i = 0; i < asmDefsGuids.Length; i++)
+            {
+                string asmDefPath = AssetDatabase.GUIDToAssetPath(asmDefsGuids[i]);
+                string asmDefDirectory = Path.GetDirectoryName(asmDefPath);
+            
+                if (asmDefDirectory == path)
+                    return AssetDatabase.LoadAssetAtPath<AssemblyDefinitionAsset>(asmDefPath);
+            }
+
+            return null;
+        }
+    
+        public static AssemblyDefinitionAsset GetAsmDefInFolderOrParent(string path)
+        {
+            string currentPath = path;
+
+            // First check if there's an asmdef in the start folder.
+            AssemblyDefinitionAsset asmDefInStartFolder = GetAsmDefInFolder(path);
+            if (asmDefInStartFolder != null)
+                return asmDefInStartFolder;
+
+            // Now keep checking every parent folder if there's an asmdef there.
+            while (currentPath.HasParentDirectory())
+            {
+                // Go to the parent folder.
+                currentPath = currentPath.GetParentDirectory();
+            
+                // See if there's an asmdef in this parent folder.
+                AssemblyDefinitionAsset asmDefInFolder = GetAsmDefInFolder(currentPath);
+                if (asmDefInFolder != null)
+                    return asmDefInFolder;
+            }
+
+            return null;
         }
     }
 }
