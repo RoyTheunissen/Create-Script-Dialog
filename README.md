@@ -13,13 +13,15 @@ You just want to make a simple custom inspector but now you have to:
 - Create a new Editor script probably by duplicating an existing one (waiting for recompilation...) and then moving it (recompiling again...)
 - Then you rename the file, rename the class and update the `[CustomEditor]` attribute above it.
 - If you use asmdefs, you now also need to create a .asmref file that references the correct .asmdef.
-  - Maybe there is no Editor.asmdef yet, and you have to make a new one. Make a new folder again, create a dummy script, create an .asmdef
+  - Maybe there is no Editor.asmdef yet, so before all that  you have to make a new one.
+  - Make a new folder again
+  - Create a dummy script because .asmdef folders can't be empty
+  - Then create a new .asmdef
+  - THEN you can make your .asmref
   
 TEDIOUS, I SAY
 
-This is what all of that looks like with the Create Script Dialog
-
-[TO DO Video](https://www.youtube.com/watch?v=dQw4w9WgXcQ)    |    [TO DO Article](https://blog.roytheunissen.com)
+This is what all of that looks like with the Create Script Dialog. Just right-click, `Create>Script...` and press Create:
 
 ![Example](Documentation~/Example.gif)
 
