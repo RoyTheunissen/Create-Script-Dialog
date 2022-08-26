@@ -1,0 +1,10 @@
+using System;
+
+$Namespace
+{
+    $ClassSummary
+    public static class $ClassName 
+    {
+        $Functions
+    }
+}
