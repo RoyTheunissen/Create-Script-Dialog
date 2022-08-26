@@ -42,7 +42,7 @@ namespace UnityEditor
 			}
 		}
 
-        private string Namespace
+		public string NamespaceLine
         {
             get
             {
@@ -88,7 +88,7 @@ namespace UnityEditor
             string path = Path.Combine(NewScriptWindow.GetAbsoluteCustomTemplatePath(), "Header.txt");
             if (File.Exists(path))
             {
-                m_Text = StringUtility.ReplaceAndKeepIndentation(m_Text, "$ClassSummary", File.ReadAllText(path));
+                m_Text = m_Text.ReplaceAndKeepIndentation("$ClassSummary", File.ReadAllText(path));
             }
 			
 			// Class Name
@@ -96,7 +96,7 @@ namespace UnityEditor
 			m_Text = m_Text.Replace ("$NicifiedClassName", ObjectNames.NicifyVariableName (ClassName));
 
             // Namespace
-            m_Text = m_Text.Replace("$Namespace", Namespace);
+            m_Text = m_Text.Replace("$Namespace", NamespaceLine);
 			
 			// Other replacements
 			foreach (KeyValuePair<string, string> kvp in m_ScriptPrescription.m_StringReplacements)

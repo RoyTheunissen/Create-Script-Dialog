@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
@@ -7,6 +8,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
     {
         private const string ProjectRootPath = @"Assets/";
         private const string ScriptsFolderPath = @"Scripts";
+        private const string EditorFolderName = "Editor";
 
         private const char SubNamespaceSymbol = '.';
 
@@ -24,6 +26,8 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         public static string GetNamespaceForPath(string path, bool includePrefix)
         {
+            path = path.Replace(PathUtility.FolderSymbol, PathUtility.AlternateFolderSymbol);
+            
             // Strip it up until the project root.
             string result = PathUtility.RemovePathUpUntil(path, ProjectRootPath);
 
@@ -61,6 +65,12 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
             // Clamp the namespace to the specified depth.
             result = ClampNamespaceDepth(result, depth);
+            
+            // Remove "Editor" at the end if it's there. It would conflict with Unity's Editor class.
+            List<string> sections = new List<string>(result.Split(SubNamespaceSymbol));
+            if (sections.Count > 0 && sections[sections.Count - 1] == EditorFolderName)
+                sections.RemoveAt(sections.Count - 1);
+            result = string.Join(SubNamespaceSymbol, sections);
 
             return result;
         }
