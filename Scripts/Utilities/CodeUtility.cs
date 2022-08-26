@@ -26,7 +26,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         public static int GetIndexOfEarliestDeclaration(string contents)
         {
-            return StringUtility.IndexOfAny(contents, DeclarationWords);
+            return contents.IndexOfAny(DeclarationWords);
         }
 
         public static string Indent(string text, int numberOfIndentations, int fromIndex, int toIndex, bool skipFirstLine)

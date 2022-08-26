@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
-    public static class StringUtility
+    public static class StringExtensions
     {
         private const string HungarianPrefix = "m_";
         private const string Underscore = "_";
@@ -18,7 +18,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         /// <param name="anyOf">The texts to search for.</param>
         /// <returns>-1 if none of the strings occurred,
         /// otherwise the earliest zer-based index.</returns>
-        public static int IndexOfAny(string text, string[] anyOf)
+        public static int IndexOfAny(this string text, string[] anyOf)
         {
             int result = int.MaxValue;
             int index;
@@ -52,7 +52,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         /// <param name="text">The text within which to search.</param>
         /// <param name="position">The position to retrieve the preceding indentation of.</param>
         /// <returns>A string containing all preceding indentation characters.</returns>
-        public static string GetIndentationAt(string text, int position)
+        public static string GetIndentationAt(this string text, int position)
         {
             string result = "";
             text = text.Substring(0, position);
@@ -70,7 +70,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         /// <param name="text">Text within which to search.</param>
         /// <param name="position">The position to retrieve the preceding indentation count of.</param>
         /// <returns>The number of indentations preceding the specified position.</returns>
-        public static int GetIndentationCountAt(string text, int position)
+        public static int GetIndentationCountAt(this string text, int position)
         {
             // Get the indentation string.
             string indentation = GetIndentationAt(text, position);
@@ -100,7 +100,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             text = text.Insert(oldStringIndex, newString);
         }
 
-        public static string ReplaceAndKeepIndentation(string text, string oldString, string newString)
+        public static string ReplaceAndKeepIndentation(this string text, string oldString, string newString)
         {
             int oldStringIndex = text.IndexOf(oldString);
             while (oldStringIndex != -1)
@@ -118,7 +118,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         /// </summary>
         /// <param name="programmerText">The programmer text.</param>
         /// <returns>The human readable equivalent of the programmer text.</returns>
-        public static string GetHumanReadableText(string programmerText)
+        public static string GetHumanReadableText(this string programmerText)
         {
             bool wasLetter = false;
             bool wasUpperCase = false;
@@ -180,7 +180,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             return result;
         }
         
-        public static string RemovePrefix(string name, string prefix)
+        public static string RemovePrefix(this string name, string prefix)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(prefix))
                 return name;
@@ -191,12 +191,12 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             return name.Substring(prefix.Length);
         }
     
-        public static string RemovePrefix(string name, char prefix)
+        public static string RemovePrefix(this string name, char prefix)
         {
             return RemovePrefix(name, prefix.ToString());
         }
     
-        public static string RemoveSuffix(string name, string suffix)
+        public static string RemoveSuffix(this string name, string suffix)
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(suffix))
                 return name;
@@ -207,7 +207,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             return name.Substring(0, name.Length - suffix.Length);
         }
     
-        public static string RemoveSuffix(string name, char suffix)
+        public static string RemoveSuffix(this string name, char suffix)
         {
             return RemoveSuffix(name, suffix.ToString());
         }
@@ -215,7 +215,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         /// <summary>
         /// Converts the slashes to be consistent.
         /// </summary>
-        public static string ToUnityPath(string name)
+        public static string ToUnityPath(this string name)
         {
             return name.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         }
@@ -224,18 +224,18 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         private const string AssetsFolder = "Assets";
     
-        public static string RemoveAssetsPrefix(string path)
+        public static string RemoveAssetsPrefix(this string path)
         {
             return RemovePrefix(path, AssetsFolder + Path.AltDirectorySeparatorChar);
         }
 
-        public static string GetAbsolutePath(string projectPath)
+        public static string GetAbsolutePath(this string projectPath)
         {
             string absolutePath = RemoveAssetsPrefix(projectPath);
             return Application.dataPath + Path.AltDirectorySeparatorChar + absolutePath;
         }
     
-        public static string GetProjectPath(string absolutePath)
+        public static string GetProjectPath(this string absolutePath)
         {
             string projectPath = RemoveSuffix(Application.dataPath, AssetsFolder);
             projectPath = RemoveSuffix(projectPath, Path.AltDirectorySeparatorChar);
@@ -244,12 +244,12 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             return relativePath;
         }
 
-        public static bool HasParentDirectory(string path)
+        public static bool HasParentDirectory(this string path)
         {
             return path.LastIndexOfAny(DirectorySeparators) != -1;
         }
     
-        public static string GetParentDirectory(string path)
+        public static string GetParentDirectory(this string path)
         {
             int lastDirectorySeparator = path.LastIndexOfAny(DirectorySeparators);
             if (lastDirectorySeparator == -1)
@@ -258,7 +258,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             return path.Substring(0, lastDirectorySeparator);
         }
 
-        public static bool StartsWithAny(string path, params string[] prefixes)
+        public static bool StartsWithAny(this string path, params string[] prefixes)
         {
             foreach (string prefix in prefixes)
             {

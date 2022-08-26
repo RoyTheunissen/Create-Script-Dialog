@@ -77,9 +77,9 @@ public class NewScriptWindow : EditorWindow
 
                 didCacheTemplatePath = true;
                 string asmDefPath = AssetDatabase.GUIDToAssetPath(asmDefs[0]);
-                string parentPath = StringUtility.GetParentDirectory(asmDefPath);
-                parentPath = StringUtility.GetParentDirectory(parentPath);
-                parentPath = StringUtility.GetParentDirectory(parentPath);
+                string parentPath = asmDefPath.GetParentDirectory();
+                parentPath = parentPath.GetParentDirectory();
+                parentPath = parentPath.GetParentDirectory();
 
                 cachedTemplatePath = parentPath + "/" + kTemplateFolderName;
             }
@@ -94,9 +94,9 @@ public class NewScriptWindow : EditorWindow
 
     public static string GetAbsoluteCustomTemplatePath()
     {
-        string projectPath = StringUtility.GetParentDirectory(Application.dataPath);
+        string projectPath = Application.dataPath.GetParentDirectory();
         string relativeTemplatePath = TemplatePath;
-        return StringUtility.ToUnityPath(Path.Combine(projectPath, relativeTemplatePath));
+        return Path.Combine(projectPath, relativeTemplatePath).ToUnityPath();
     }
 
     private void SetTemplate(string name)

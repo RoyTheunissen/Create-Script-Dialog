@@ -88,7 +88,7 @@ namespace UnityEditor
             string path = Path.Combine(NewScriptWindow.GetAbsoluteCustomTemplatePath(), "Header.txt");
             if (File.Exists(path))
             {
-                m_Text = StringUtility.ReplaceAndKeepIndentation(m_Text, "$ClassSummary", File.ReadAllText(path));
+                m_Text = m_Text.ReplaceAndKeepIndentation("$ClassSummary", File.ReadAllText(path));
             }
 			
 			// Class Name
