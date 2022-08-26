@@ -14,10 +14,10 @@ public class NewScriptWindow : EditorWindow
     private const int kLabelWidth = 85;
     private const string kLanguageEditorPrefName = "NewScriptLanguage";
     private const string kNamespacePrefixPrefName = "NewScriptNamespacePrefix";
-    private const string kTemplatePath = "CreateScriptDialog/SmartScriptTemplates";
-    private const string kResourcesTemplatePath = "Resources/SmartScriptTemplates";
+    private const string kTemplateFolderName = "SmartScriptTemplates";
+    private const string kResourcesTemplatePath = "Resources/" + kTemplateFolderName;
     private const string kMonoBehaviourName = "MonoBehaviour";
-    private const string kPlainClassName = "Empty Class";
+    private const string kPlainClassName = "Class";
     private const string kCustomEditorClassName = "Editor";
     private const string kTempEditorClassPrefix = "E:";
     private const string kNoTemplateString = "No Template Found";
@@ -58,6 +58,30 @@ public class NewScriptWindow : EditorWindow
         }
     }
     private static Styles m_Styles;
+    
+    [NonSerialized] private static string cachedTemplatePath;
+    [NonSerialized] private static bool didCacheTemplatePath;
+    private static string TemplatePath
+    {
+        get
+        {
+            if (!didCacheTemplatePath)
+            {
+                string[] asmDefs = AssetDatabase.FindAssets("t:asmdef CreateScriptDialog.Editor");
+                if (asmDefs.Length != 1)
+                    return null;
+
+                didCacheTemplatePath = true;
+                string asmDefPath = AssetDatabase.GUIDToAssetPath(asmDefs[0]);
+                string parentPath = StringUtility.GetParentDirectory(asmDefPath);
+                parentPath = StringUtility.GetParentDirectory(parentPath);
+                parentPath = StringUtility.GetParentDirectory(parentPath);
+
+                cachedTemplatePath = parentPath + "/" + kTemplateFolderName;
+            }
+            return cachedTemplatePath;
+        }
+    }
 
     private string GetAbsoluteBuiltinTemplatePath()
     {
@@ -66,7 +90,9 @@ public class NewScriptWindow : EditorWindow
 
     public static string GetAbsoluteCustomTemplatePath()
     {
-        return Path.Combine(Application.dataPath, kTemplatePath);
+        string projectPath = StringUtility.GetParentDirectory(Application.dataPath);
+        string relativeTemplatePath = TemplatePath;
+        return StringUtility.ToUnityPath(Path.Combine(projectPath, relativeTemplatePath));
     }
 
     private void UpdateTemplateNamesAndTemplate()
