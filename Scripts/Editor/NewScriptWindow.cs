@@ -562,12 +562,9 @@ public class NewScriptWindow : EditorWindow
 
             TemplateSelectionGUI();
 
-            if (!m_IsEditorClass)
-            {
-                GUILayout.Space(10);
+            GUILayout.Space(10);
 
-                NamespaceGUI();
-            }
+            NamespaceGUI();
 
             if (GetTemplateName() == kMonoBehaviourName)
             {
