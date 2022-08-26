@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using UnityEngine;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
@@ -176,6 +178,95 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
                 wasUpperCase = char.IsUpper(programmerText[i]);
             }
             return result;
+        }
+        
+        public static string RemovePrefix(string name, string prefix)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(prefix))
+                return name;
+
+            if (!name.StartsWith(prefix))
+                return name;
+
+            return name.Substring(prefix.Length);
+        }
+    
+        public static string RemovePrefix(string name, char prefix)
+        {
+            return RemovePrefix(name, prefix.ToString());
+        }
+    
+        public static string RemoveSuffix(string name, string suffix)
+        {
+            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(suffix))
+                return name;
+
+            if (!name.EndsWith(suffix))
+                return name;
+
+            return name.Substring(0, name.Length - suffix.Length);
+        }
+    
+        public static string RemoveSuffix(string name, char suffix)
+        {
+            return RemoveSuffix(name, suffix.ToString());
+        }
+        
+        /// <summary>
+        /// Converts the slashes to be consistent.
+        /// </summary>
+        public static string ToUnityPath(string name)
+        {
+            return name.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        }
+        
+        private static readonly char[] DirectorySeparators = { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+
+        private const string AssetsFolder = "Assets";
+    
+        public static string RemoveAssetsPrefix(string path)
+        {
+            return RemovePrefix(path, AssetsFolder + Path.AltDirectorySeparatorChar);
+        }
+
+        public static string GetAbsolutePath(string projectPath)
+        {
+            string absolutePath = RemoveAssetsPrefix(projectPath);
+            return Application.dataPath + Path.AltDirectorySeparatorChar + absolutePath;
+        }
+    
+        public static string GetProjectPath(string absolutePath)
+        {
+            string projectPath = RemoveSuffix(Application.dataPath, AssetsFolder);
+            projectPath = RemoveSuffix(projectPath, Path.AltDirectorySeparatorChar);
+            
+            string relativePath = ToUnityPath(Path.GetRelativePath(projectPath, absolutePath));
+            return relativePath;
+        }
+
+        public static bool HasParentDirectory(string path)
+        {
+            return path.LastIndexOfAny(DirectorySeparators) != -1;
+        }
+    
+        public static string GetParentDirectory(string path)
+        {
+            int lastDirectorySeparator = path.LastIndexOfAny(DirectorySeparators);
+            if (lastDirectorySeparator == -1)
+                return path;
+
+            return path.Substring(0, lastDirectorySeparator);
+        }
+
+        public static bool StartsWithAny(string path, params string[] prefixes)
+        {
+            foreach (string prefix in prefixes)
+            {
+                if (path.StartsWith(prefix))
+                    return true;
+            }
+
+            return false;
         }
     }
 }
