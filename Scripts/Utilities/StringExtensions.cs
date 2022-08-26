@@ -226,7 +226,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
     
         public static string RemoveAssetsPrefix(this string path)
         {
-            return RemovePrefix(path, AssetsFolder + Path.AltDirectorySeparatorChar);
+            return RemovePrefix(path.ToUnityPath(), AssetsFolder + Path.AltDirectorySeparatorChar);
         }
 
         public static string GetAbsolutePath(this string projectPath)
@@ -237,6 +237,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
     
         public static string GetProjectPath(this string absolutePath)
         {
+            absolutePath = absolutePath.ToUnityPath();
             string projectPath = RemoveSuffix(Application.dataPath, AssetsFolder);
             projectPath = RemoveSuffix(projectPath, Path.AltDirectorySeparatorChar);
             
