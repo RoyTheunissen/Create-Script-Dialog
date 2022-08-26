@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using RoyTheunissen.CreateScriptDialog.Utilities;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -23,6 +24,7 @@ public class NewScriptWindow : EditorWindow
     private static readonly string[] kCustomEditorClassNames = { "Editor", "PropertyDrawer" };
     private const string kTempEditorClassPrefix = "E:";
     private const string kNoTemplateString = "No Template Found";
+    private const string kEditorFolderName = "Editor";
     // char array can't be const for compiler reasons but this should still be treated as such.
     private char[] kInvalidPathChars = new char[] { '<', '>', ':', '"', '|', '?', '*', (char)0 };
     private char[] kPathSepChars = new char[] { '/', '\\' };
@@ -891,14 +893,69 @@ public class NewScriptWindow : EditorWindow
 
     private void CreateScript()
     {
-        if (!Directory.Exists(TargetDir()))
-            Directory.CreateDirectory(TargetDir());
+        NewScriptGenerator newScriptGenerator = new NewScriptGenerator(m_ScriptPrescription);
+        
+        string targetDirectory = TargetDir();
+        if (!Directory.Exists(targetDirectory))
+        {
+            Directory.CreateDirectory(targetDirectory);
+            if (targetDirectory.EndsWith(kEditorFolderName))
+                TryCreateAsmDefsForEditorFolder(targetDirectory, newScriptGenerator.NamespaceLine);
+        }
 
-        var writer = new StreamWriter(TargetPath());
-        writer.Write(new NewScriptGenerator(m_ScriptPrescription).ToString());
+        string path = TargetPath();
+        var writer = new StreamWriter(path);
+        writer.Write(newScriptGenerator.ToString());
         writer.Close();
         writer.Dispose();
         AssetDatabase.Refresh();
+
+        // Ping the newly created script so you don't lose it, especially if it's in a new Editor folder...
+        Object script = AssetDatabase.LoadAssetAtPath<Object>(path);
+        EditorGUIUtility.PingObject(script);
+    }
+
+    private void TryCreateAsmDefsForEditorFolder(string targetDirectory, string @namespace)
+    {
+        string parentDirectory = targetDirectory.GetParentDirectory();
+        AssemblyDefinitionAsset asmDefInParentDirectory = AsmDefUtilities.GetAsmDefInFolder(parentDirectory);
+
+        if (asmDefInParentDirectory != null)
+        {
+            // There was an asmdef next to the Editor folder. Let's create a new asmdef that references it.
+            AsmDefUtilities.CreateEditorFolderAsmDef(targetDirectory, asmDefInParentDirectory);
+            return;
+        }
+
+        asmDefInParentDirectory = AsmDefUtilities.GetAsmDefInFolderOrParent(parentDirectory);
+        
+        if (asmDefInParentDirectory == null)
+        {
+            // No asmdef found right next to the Editor folder nor in a parent folder.
+            // Apparently asmdefs are not being used here, so just leave it...
+            return;
+        }
+
+        AssemblyDefinitionAsset asmDefInParentEditorFolder = AsmDefUtilities.GetParentEditorAsmDef(targetDirectory);
+        
+        if (asmDefInParentEditorFolder != null)
+        {
+            // If there is an Editor folder above us already, just create an .asmref file that points to it.
+            AsmDefUtilities.CreateAsmRef(targetDirectory, asmDefInParentEditorFolder);
+        }
+        else
+        {
+            // There was no Editor folder above us. We're going to have to create a new one with its own .asmdef and
+            // also a dummy script, because .asmdefs can't be in an empty folder.
+            
+            // The dummy should be in a namespace that is just Author.Project
+            string dummyNamespace = NamespaceUtility.ClampNamespaceDepth(@namespace, 2);
+            
+            // Create a new editor folder at the root with its own asmdef, then reference that with an asmref.
+            AssemblyDefinitionAsset rootEditorFolderAsmDef =
+                AsmDefUtilities.CreateEmptyEditorFolderForRuntimeAsmDef(asmDefInParentDirectory, dummyNamespace);
+            AsmDefUtilities.CreateAsmRef(targetDirectory, rootEditorFolderAsmDef);
+        }
     }
 
     private void UpdateNamespace()

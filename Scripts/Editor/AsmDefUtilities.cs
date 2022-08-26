@@ -184,7 +184,7 @@ namespace UnityEditor
             AssetDatabase.ImportAsset(filePath.GetProjectPath());
         }
 
-        public static void CreateEditorFolderAsmDef(string folderName, AssemblyDefinitionAsset runtimeAsmDef)
+        public static AssemblyDefinitionAsset CreateEditorFolderAsmDef(string folderName, AssemblyDefinitionAsset runtimeAsmDef)
         {
             string asmDefPath = AssetDatabase.GetAssetPath(runtimeAsmDef);
             string fileName = Path.GetFileNameWithoutExtension(asmDefPath) + Separator + "Editor";
@@ -193,7 +193,10 @@ namespace UnityEditor
             AsmDef asmDef = new AsmDef(fileName, runtimeAsmDef);
             
             File.WriteAllText(filePath, asmDef.ToString());
-            AssetDatabase.ImportAsset(filePath.GetProjectPath());
+
+            filePath = filePath.GetProjectPath();
+            AssetDatabase.ImportAsset(filePath, ImportAssetOptions.ForceSynchronousImport);
+            return AssetDatabase.LoadAssetAtPath<AssemblyDefinitionAsset>(filePath);
         }
 
         private static void AddAsmRefToTopLevelEditorFolder(Object selectedEditorFolder)
@@ -259,6 +262,35 @@ namespace UnityEditor
             }
 
             return null;
+        }
+
+        public static AssemblyDefinitionAsset CreateEmptyEditorFolderForRuntimeAsmDef(
+            AssemblyDefinitionAsset runtimeAsmDef, string dummyNamespace = null)
+        {
+            string runtimeAsmDefFolder = Path.GetDirectoryName(AssetDatabase.GetAssetPath(runtimeAsmDef));
+
+            AssetDatabase.CreateFolder(runtimeAsmDefFolder, "Editor");
+            string editorFolder = runtimeAsmDefFolder + Path.AltDirectorySeparatorChar + "Editor";
+
+            // Create a dummy file because you can't have asmdefs in empty folders.
+            bool hasNamespace = !string.IsNullOrEmpty(dummyNamespace);
+            string dummyFilePath = editorFolder + Path.AltDirectorySeparatorChar + "Dummy.cs";
+            
+            StringBuilder sb = new StringBuilder();
+            if (hasNamespace)
+            {
+                sb.AppendLine(dummyNamespace);
+                sb.AppendLine("{");
+                sb.Append(CodeUtility.IndentationString);
+            }
+            sb.AppendLine("public class Dummy {}");
+            if (hasNamespace)
+                sb.AppendLine("}\r\n");
+            
+            File.WriteAllText(dummyFilePath, sb.ToString());
+            AssetDatabase.ImportAsset(dummyFilePath, ImportAssetOptions.ForceSynchronousImport);
+
+            return CreateEditorFolderAsmDef(editorFolder, runtimeAsmDef);
         }
     }
 }

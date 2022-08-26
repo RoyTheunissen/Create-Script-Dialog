@@ -42,7 +42,7 @@ namespace UnityEditor
 			}
 		}
 
-        private string Namespace
+		public string NamespaceLine
         {
             get
             {
@@ -96,7 +96,7 @@ namespace UnityEditor
 			m_Text = m_Text.Replace ("$NicifiedClassName", ObjectNames.NicifyVariableName (ClassName));
 
             // Namespace
-            m_Text = m_Text.Replace("$Namespace", Namespace);
+            m_Text = m_Text.Replace("$Namespace", NamespaceLine);
 			
 			// Other replacements
 			foreach (KeyValuePair<string, string> kvp in m_ScriptPrescription.m_StringReplacements)
