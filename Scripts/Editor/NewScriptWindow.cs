@@ -18,7 +18,7 @@ public class NewScriptWindow : EditorWindow
     private const string kResourcesTemplatePath = "Resources/" + kTemplateFolderName;
     private const string kMonoBehaviourName = "MonoBehaviour";
     private const string kPlainClassName = "Class";
-    private const string kCustomEditorClassName = "Editor";
+    private static readonly string[] kCustomEditorClassNames = { "Editor", "PropertyDrawer" };
     private const string kTempEditorClassPrefix = "E:";
     private const string kNoTemplateString = "No Template Found";
     // char array can't be const for compiler reasons but this should still be treated as such.
@@ -189,7 +189,7 @@ public class NewScriptWindow : EditorWindow
                 m_ScriptPrescription.m_Template.Substring(m_ScriptPrescription.m_Template.IndexOf("\n") + 1);
 
         m_IsEditorClass = IsEditorClass(m_BaseClass);
-        m_IsCustomEditor = (m_BaseClass == kCustomEditorClassName);
+        m_IsCustomEditor = IsCustomEditorClass(m_BaseClass);
         m_ScriptPrescription.m_StringReplacements.Clear();
 
         // Try to find function file first in custom templates folder and then in built-in
@@ -663,7 +663,7 @@ public class NewScriptWindow : EditorWindow
         if (m_CustomEditorTargetClassName == string.Empty)
             m_ScriptPrescription.m_ClassName = string.Empty;
         else
-            m_ScriptPrescription.m_ClassName = m_CustomEditorTargetClassName + "Editor";
+            m_ScriptPrescription.m_ClassName = m_CustomEditorTargetClassName + m_BaseClass;
     }
 
     private void CustomEditorTargetClassNameGUI()
@@ -709,6 +709,7 @@ public class NewScriptWindow : EditorWindow
             m_TemplateIndex = templateIndexNew;
             UpdateTemplateNamesAndTemplate();
             AutomaticHandlingOnChangeTemplate();
+            SetClassNameBasedOnTargetClassName();
         }
     }
 
@@ -932,6 +933,14 @@ public class NewScriptWindow : EditorWindow
         if (className == null)
             return false;
         return GetAllClasses("UnityEditor").Contains(className);
+    }
+    
+    public static bool IsCustomEditorClass(string className)
+    {
+        if (string.IsNullOrEmpty(className))
+            return false;
+        
+        return kCustomEditorClassNames.Contains(className);
     }
 
     /// Method to populate a list with all the class in the namespace provided by the user

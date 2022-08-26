@@ -5,7 +5,7 @@ using UnityEngine;
 $Namespace
 {
     $ClassSummary
-    [CustomPropertyDrawer(typeof($ClassName))]
+    [CustomPropertyDrawer(typeof($TargetClassName))]
     public class $ClassName : PropertyDrawer
     {
         $Functions
