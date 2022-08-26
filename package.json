@@ -1,0 +1,29 @@
+{
+  "name": "com.roytheunissen.createscriptdialog",
+  "displayName": "Create Script Dialog",
+  "version": "0.0.1",
+  "unity": "2019.1",
+  "description": "A wizard that lets you create scripts from useful templates, with correct namespaces and asmdefs/asmrefs support.",
+  "keywords": [
+    "create script dialog", 
+    "create script wizard",
+    "create",
+    "script",
+    "dialog",
+    "wizard",
+	"scripts",
+	"extension",
+	"window"
+  ],
+  "author": {
+    "name": "Roy Theunissen",
+    "url": "https://www.roytheunissen.com"
+  },
+  "category": "editor extensions",
+  "homepage": "https://github.com/RoyTheunissen/Create-Script-Dialog",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RoyTheunissen/Create-Script-Dialog.git"
+  },
+  "bugs": "https://github.com/RoyTheunissen/Create-Script-Dialog/issues"
+}
