@@ -899,6 +899,8 @@ public class NewScriptWindow : EditorWindow
         if (!Directory.Exists(targetDirectory))
         {
             Directory.CreateDirectory(targetDirectory);
+            
+            // If we just created an Editor folder, let's do a quick check if we ought to create any asmdefs/asmrefs.
             if (targetDirectory.EndsWith(kEditorFolderName))
                 TryCreateAsmDefsForEditorFolder(targetDirectory, newScriptGenerator.NamespaceLine);
         }

@@ -184,14 +184,15 @@ namespace UnityEditor
             AssetDatabase.ImportAsset(filePath.GetProjectPath());
         }
 
-        public static AssemblyDefinitionAsset CreateEditorFolderAsmDef(string folderName, AssemblyDefinitionAsset runtimeAsmDef)
+        public static AssemblyDefinitionAsset CreateEditorFolderAsmDef(
+            string folderName, AssemblyDefinitionAsset runtimeAsmDef)
         {
             string asmDefPath = AssetDatabase.GetAssetPath(runtimeAsmDef);
             string fileName = Path.GetFileNameWithoutExtension(asmDefPath) + Separator + "Editor";
             string filePath = folderName.GetAbsolutePath() + Path.AltDirectorySeparatorChar + fileName + ".asmdef";
 
             AsmDef asmDef = new AsmDef(fileName, runtimeAsmDef);
-            
+
             File.WriteAllText(filePath, asmDef.ToString());
 
             filePath = filePath.GetProjectPath();
@@ -273,9 +274,16 @@ namespace UnityEditor
             string editorFolder = runtimeAsmDefFolder + Path.AltDirectorySeparatorChar + "Editor";
 
             // Create a dummy file because you can't have asmdefs in empty folders.
+            CreateDummyScript(dummyNamespace, editorFolder);
+
+            return CreateEditorFolderAsmDef(editorFolder, runtimeAsmDef);
+        }
+
+        private static void CreateDummyScript(string dummyNamespace, string editorFolder)
+        {
             bool hasNamespace = !string.IsNullOrEmpty(dummyNamespace);
             string dummyFilePath = editorFolder + Path.AltDirectorySeparatorChar + "Dummy.cs";
-            
+
             StringBuilder sb = new StringBuilder();
             if (hasNamespace)
             {
@@ -283,14 +291,13 @@ namespace UnityEditor
                 sb.AppendLine("{");
                 sb.Append(CodeUtility.IndentationString);
             }
+
             sb.AppendLine("public class Dummy {}");
             if (hasNamespace)
                 sb.AppendLine("}\r\n");
-            
+
             File.WriteAllText(dummyFilePath, sb.ToString());
             AssetDatabase.ImportAsset(dummyFilePath, ImportAssetOptions.ForceSynchronousImport);
-
-            return CreateEditorFolderAsmDef(editorFolder, runtimeAsmDef);
         }
     }
 }
