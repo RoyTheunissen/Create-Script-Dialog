@@ -41,7 +41,6 @@ public class NewScriptWindow : EditorWindow
     private bool m_IsEditorClass = false;
     private bool m_IsCustomEditor = false;
     private bool m_FocusTextFieldNow = true;
-    private GameObject m_GameObjectToAddTo;
     private string m_Directory = string.Empty;
     private Vector2 m_PreviewScroll;
     private Vector2 m_OptionsScroll;
@@ -496,12 +495,6 @@ public class NewScriptWindow : EditorWindow
     {
         CreateScript();
 
-        /*
-        if (CanAddComponent())
-            InternalEditorUtility.AddScriptComponentUnchecked(m_GameObjectToAddTo,
-                AssetDatabase.LoadAssetAtPath(TargetPath(), typeof(MonoScript)) as MonoScript);
-
-    */
         Close();
         GUIUtility.ExitGUI();
     }
@@ -549,18 +542,13 @@ public class NewScriptWindow : EditorWindow
 
             bool guiEnabledTemp = GUI.enabled;
             GUI.enabled = canCreate;
-            if (GUILayout.Button(GetCreateButtonText(), GUILayout.Width(kButtonWidth)))
+            if (GUILayout.Button("Create", GUILayout.Width(kButtonWidth)))
             {
                 Create();
             }
             GUI.enabled = guiEnabledTemp;
         }
         GUILayout.EndHorizontal();
-    }
-
-    private bool CanAddComponent()
-    {
-        return (m_GameObjectToAddTo != null && m_BaseClass == kMonoBehaviourName);
     }
 
     private void OptionsGUI()
@@ -584,12 +572,6 @@ public class NewScriptWindow : EditorWindow
             GUILayout.Space(10);
 
             NamespaceGUI();
-
-            if (GetTemplateName() == kMonoBehaviourName)
-            {
-                GUILayout.Space(10);
-                AttachToGUI();
-            }
 
             if (m_IsCustomEditor)
             {
@@ -658,20 +640,6 @@ public class NewScriptWindow : EditorWindow
 
         }
         EditorGUILayout.EndHorizontal();
-    }
-
-    private void AttachToGUI()
-    {
-        GUILayout.BeginHorizontal();
-        {
-            m_GameObjectToAddTo = EditorGUILayout.ObjectField("Attach to", m_GameObjectToAddTo, typeof(GameObject), true) as GameObject;
-
-            if (ClearButton())
-                m_GameObjectToAddTo = null;
-        }
-        GUILayout.EndHorizontal();
-
-        HelpField("Click a GameObject or Prefab to select.");
     }
 
     private void SetClassNameBasedOnTargetClassName()
@@ -886,11 +854,6 @@ public class NewScriptWindow : EditorWindow
         return !typeof(UnityEngine.Object).IsAssignableFrom(type);
     }
 
-    private string GetCreateButtonText()
-    {
-        return CanAddComponent() ? "Create and Attach" : "Create";
-    }
-
     private void CreateScript()
     {
         NewScriptGenerator newScriptGenerator = new NewScriptGenerator(m_ScriptPrescription);
@@ -981,8 +944,6 @@ public class NewScriptWindow : EditorWindow
         else
         {
             m_Directory = Path.GetDirectoryName(AssetPathWithoutAssetPrefix(Selection.activeObject));
-            if (Selection.activeGameObject != null)
-                m_GameObjectToAddTo = Selection.activeGameObject;
             bool isScript = Selection.activeObject is MonoScript;
             MonoScript script = Selection.activeObject as MonoScript;
             
