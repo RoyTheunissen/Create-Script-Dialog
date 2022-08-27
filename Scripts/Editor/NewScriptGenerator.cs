@@ -113,11 +113,16 @@ namespace UnityEditor
 				bool hasFunctions = false;
 				if (m_ScriptPrescription.m_Functions != null)
 				{
-					foreach (var function in m_ScriptPrescription.m_Functions.Where (f => f.include))
+					IEnumerable<FunctionData> includedFunctions = m_ScriptPrescription.m_Functions.Where (f => f.include);
+					int includedFunctionsCount = includedFunctions.Count();
+					int index = 0;
+					foreach (var function in includedFunctions)
 					{
 						WriteFunction (function);
-						WriteBlankLine ();
+						if (index < includedFunctionsCount - 1)
+							WriteBlankLine ();
 						hasFunctions = true;
+						index++;
 					}
 					
 					// Replace $Functions keyword plus newline with generated functions text
