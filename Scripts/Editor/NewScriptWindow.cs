@@ -254,6 +254,12 @@ public class NewScriptWindow : EditorWindow
                     }
                     if (function.scope == null)
                         function.scope = "";
+                    
+                    if (functionLine.StartsWith("static "))
+                    {
+                        function.isStatic = true;
+                        functionLine = functionLine.Substring("static ".Length);
+                    }
 
                     if (functionLine.StartsWith("override "))
                     {

@@ -30,6 +30,7 @@ namespace UnityEditor
         public string scope;
 		public string returnType;
 		public string returnDefault;
+		public bool isStatic;
         public bool isVirtual;
 		public ParameterData[] parameters;
 		public string comment;
@@ -42,6 +43,7 @@ namespace UnityEditor
             scope = null;
 			returnType = null;
 			returnDefault = null;
+			isStatic = false;
 			isVirtual = false;
 			parameters = null;
 			include = false;

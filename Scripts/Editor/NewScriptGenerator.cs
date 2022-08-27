@@ -210,6 +210,7 @@ namespace UnityEditor
 		private void WriteFunction (FunctionData function)
 		{
 			string paramString = string.Empty;
+			string staticString;
 			string overrideString;
 			string returnTypeString;
 			string functionContentString;
@@ -228,9 +229,10 @@ namespace UnityEditor
 					    if (i < function.parameters.Length-1)
 						    paramString += ", ";
 				    }
+				    staticString = (function.isStatic ? "static " : string.Empty);
 				    overrideString = (function.isVirtual ? "override " : string.Empty);
 				    returnTypeString = (function.returnType == null ? "void " : function.returnType + " ");
-                    m_Writer.WriteLine(m_Indentation + function.scope + overrideString + returnTypeString + function.name + "(" + paramString + ")");
+                    m_Writer.WriteLine(m_Indentation + function.scope + staticString + overrideString + returnTypeString + function.name + "(" + paramString + ")");
                     m_Writer.WriteLine (m_Indentation + "{");
 
 				    // Function content
