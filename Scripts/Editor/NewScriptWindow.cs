@@ -956,8 +956,16 @@ public class NewScriptWindow : EditorWindow
             // If you open the dialog with a MonoBehaviour selected, default to the custom editor.
             if (isInitialOpen && isScript)
             {
-                bool isMonoBehaviour = typeof(MonoBehaviour).IsAssignableFrom(script.GetClass());
-                SetTemplate(isMonoBehaviour ? kDefaultCustomEditorForMonoBehaviours : kDefaultCustomEditorForClasses);
+                Type scriptClass = script.GetClass();
+                if (typeof(MonoBehaviour).IsAssignableFrom(scriptClass) ||
+                    typeof(ScriptableObject).IsAssignableFrom(scriptClass))
+                {
+                    SetTemplate(kDefaultCustomEditorForMonoBehaviours);
+                }
+                else
+                {
+                    SetTemplate(kDefaultCustomEditorForClasses);
+                }
             }
             
             if (m_IsCustomEditor && isScript)
