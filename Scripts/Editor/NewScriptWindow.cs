@@ -432,7 +432,6 @@ public class NewScriptWindow : EditorWindow
 
     private void OnEnable()
     {
-        m_ScriptPrescription.m_Lang = (Language)EditorPrefs.GetInt(kLanguageEditorPrefName, 0);
         m_ScriptPrescription.m_NamespacePrefix = EditorPrefs.GetString(kNamespacePrefixPrefName, string.Empty);
         UpdateTemplateNamesAndTemplate();
 

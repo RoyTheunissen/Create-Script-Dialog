@@ -220,35 +220,29 @@ namespace UnityEditor
 			string returnTypeString;
 			string functionContentString;
 			
-			switch (m_ScriptPrescription.m_Lang)
+			// Comment
+			if (!String.IsNullOrEmpty(function.comment))
+				WriteComment (function.comment);
+				
+			// Function header
+			for (int i=0; i<function.parameters.Length; i++)
 			{
-			    case Language.CSharp:
-				    // Comment
-                    if (!String.IsNullOrEmpty(function.comment))
-				        WriteComment (function.comment);
-				
-				    // Function header
-				    for (int i=0; i<function.parameters.Length; i++)
-				    {
-					    paramString += function.parameters[i].type + " " + function.parameters[i].name;
-					    if (i < function.parameters.Length-1)
-						    paramString += ", ";
-				    }
-				    staticString = (function.isStatic ? "static " : string.Empty);
-				    overrideString = (function.isVirtual ? "override " : string.Empty);
-				    returnTypeString = (function.returnType == null ? "void " : function.returnType + " ");
-                    m_Writer.WriteLine(m_Indentation + function.scope + staticString + overrideString + returnTypeString + function.name + "(" + paramString + ")");
-                    m_Writer.WriteLine (m_Indentation + "{");
-
-				    // Function content
-				    IndentLevel++;
-				    functionContentString = (function.returnType == null ? string.Empty : function.returnDefault + ";");
-				    m_Writer.WriteLine (m_Indentation + functionContentString);
-				    IndentLevel--;
-				    m_Writer.WriteLine (m_Indentation + "}");
-				
-				    break;
+				paramString += function.parameters[i].type + " " + function.parameters[i].name;
+				if (i < function.parameters.Length-1)
+					paramString += ", ";
 			}
+			staticString = (function.isStatic ? "static " : string.Empty);
+			overrideString = (function.isVirtual ? "override " : string.Empty);
+			returnTypeString = (function.returnType == null ? "void " : function.returnType + " ");
+			m_Writer.WriteLine(m_Indentation + function.scope + staticString + overrideString + returnTypeString + function.name + "(" + paramString + ")");
+			m_Writer.WriteLine (m_Indentation + "{");
+
+			// Function content
+			IndentLevel++;
+			functionContentString = (function.returnType == null ? string.Empty : function.returnDefault + ";");
+			m_Writer.WriteLine (m_Indentation + functionContentString);
+			IndentLevel--;
+			m_Writer.WriteLine (m_Indentation + "}");
 		}
 	}
 }

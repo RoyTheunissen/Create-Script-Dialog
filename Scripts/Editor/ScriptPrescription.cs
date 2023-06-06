@@ -13,15 +13,9 @@ namespace UnityEditor
 		public string m_ClassName = string.Empty;
         public string m_NamespacePrefix = string.Empty;
         public string m_NamespaceBody = string.Empty;
-		public Language m_Lang;
-		public string m_Template;
+        public string m_Template;
 		public FunctionData[] m_Functions;
 		public Dictionary<string, string> m_StringReplacements = new Dictionary<string, string> ();
-	}
-	
-	internal enum Language
-	{
-		CSharp = 1
 	}
 
 	internal struct FunctionData
