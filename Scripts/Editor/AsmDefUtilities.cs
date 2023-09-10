@@ -177,6 +177,10 @@ namespace UnityEditor
             string asmDefPath = AssetDatabase.GetAssetPath(asmDef);
             string fileName = GetAsmRefFileName(folderPath, asmDefPath);
             string filePath = folderPath.GetAbsolutePath() + Path.AltDirectorySeparatorChar + fileName + ".asmref";
+            
+            // If the file already exists, skip it.
+            if (File.Exists(filePath))
+                return;
 
             AsmRef asmRef = new AsmRef(asmDef);
             
