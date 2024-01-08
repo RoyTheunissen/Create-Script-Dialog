@@ -1,7 +1,7 @@
 {
   "name": "com.roytheunissen.createscriptdialog",
   "displayName": "Create Script Dialog",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "unity": "2019.1",
   "description": "A wizard that lets you create scripts from useful templates, with correct namespaces and asmdefs/asmrefs support.",
   "keywords": [
