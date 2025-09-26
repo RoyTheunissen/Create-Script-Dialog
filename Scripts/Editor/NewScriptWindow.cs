@@ -809,7 +809,7 @@ public class NewScriptWindow : EditorWindow
 
     private string TargetDir()
     {
-        return Path.Combine("Assets", m_Directory.Trim(kPathSepChars));
+        return m_Directory.Trim(kPathSepChars);
     }
 
     private bool ClassNameIsInvalid()
@@ -942,13 +942,13 @@ public class NewScriptWindow : EditorWindow
         
         if (IsFolder(Selection.activeObject))
         {
-            m_Directory = AssetPathWithoutAssetPrefix(Selection.activeObject);
+            m_Directory = AssetDatabase.GetAssetPath(Selection.activeObject);
             if (m_IsEditorClass && InvalidTargetPathForEditorScript())
                 m_Directory = Path.Combine(m_Directory, "Editor");
         }
         else
         {
-            m_Directory = Path.GetDirectoryName(AssetPathWithoutAssetPrefix(Selection.activeObject));
+            m_Directory = Path.GetDirectoryName(AssetDatabase.GetAssetPath(Selection.activeObject));
             bool isScript = Selection.activeObject is MonoScript;
             MonoScript script = Selection.activeObject as MonoScript;
             

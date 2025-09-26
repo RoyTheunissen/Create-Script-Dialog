@@ -28,6 +28,14 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         public static string GetNamespaceForPath(string path, bool includePrefix)
         {
             path = path.Replace(PathUtility.FolderSymbol, PathUtility.AlternateFolderSymbol);
+
+            const string AssetsPrefix = "Assets/";
+            if (path.StartsWith(AssetsPrefix))
+                path = path.Substring(AssetsPrefix.Length);
+            
+            const string PackagesPrefix = "Packages/";
+            if (path.StartsWith(PackagesPrefix))
+                path = path.Substring(PackagesPrefix.Length);
             
             // Strip it up until the project root.
             string result = PathUtility.RemovePathUpUntil(path, ProjectRootPath);
