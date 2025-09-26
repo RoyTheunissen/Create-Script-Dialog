@@ -236,9 +236,9 @@ namespace UnityEditor
             for (int i = 0; i < asmDefsGuids.Length; i++)
             {
                 string asmDefPath = AssetDatabase.GUIDToAssetPath(asmDefsGuids[i]);
-                string asmDefDirectory = Path.GetDirectoryName(asmDefPath);
+                string asmDefDirectory = Path.GetDirectoryName(asmDefPath).ToUnityPath();
             
-                if (asmDefDirectory == path)
+                if (string.Equals(asmDefDirectory, path, StringComparison.Ordinal))
                     return AssetDatabase.LoadAssetAtPath<AssemblyDefinitionAsset>(asmDefPath);
             }
 
