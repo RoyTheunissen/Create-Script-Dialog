@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
@@ -15,8 +18,6 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         private const string ImplementationSubnamespace = "Implementation";
 
-        private const string CompanyPrefix = "Paladin";
-
         /// <summary>
         /// The maximum namespace depth according to coding guidelines.
         /// Currently we've settled upon 3 so you can have Paladin.System.Audio
@@ -25,7 +26,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         private const int DefaultMaxNameSpaceDepth = 4;
 
 
-        public static string GetNamespaceForPath(string path, bool includePrefix)
+        public static string GetNamespaceForPath(string path, string prefixToStripWhenInferring = null)
         {
             path = path.Replace(PathUtility.FolderSymbol, PathUtility.AlternateFolderSymbol);
 
@@ -35,7 +36,27 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             
             const string PackagesPrefix = "Packages/";
             if (path.StartsWith(PackagesPrefix))
+            {
+                // Check if there is an Assembly Definition for the target path.
+                // If so, it might specify a root namespace. It would be best to use that as the namespace.
+                AssemblyDefinitionAsset assemblyDefinition = AsmDefUtilities.GetAsmDefInFolderOrParent(path);
+                if (assemblyDefinition != null)
+                {
+                    string rootNamespace = assemblyDefinition.GetRootNamespace();
+                    if (!string.IsNullOrEmpty(rootNamespace))
+                    {
+                        if (!string.IsNullOrEmpty(prefixToStripWhenInferring))
+                        {
+                            rootNamespace = PathUtility.RemovePathUpUntil(
+                                rootNamespace, prefixToStripWhenInferring + ".");
+                        }
+                        
+                        return rootNamespace;
+                    }
+                }
+                
                 path = path.Substring(PackagesPrefix.Length);
+            }
             
             // Strip it up until the project root.
             string result = PathUtility.RemovePathUpUntil(path, ProjectRootPath);
@@ -62,15 +83,9 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             // Convert the folder path to a valid namespace.
             result = ConvertFolderPathToSubNamespaces(result);
 
-            // Add the company prefix.
-            if (includePrefix)
-                result = AddNamespaceBefore(result, CompanyPrefix);
-
             // Figure out how deep namespaces should go. If the company prefix is omitted,
             // the first section is already a subnamespace.
             int depth = DefaultMaxNameSpaceDepth;
-            if (!includePrefix)
-                depth--;
 
             // Clamp the namespace to the specified depth.
             result = ClampNamespaceDepth(result, depth);
@@ -120,11 +135,6 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
             }
 
             return result;
-        }
-
-        public static string GetNamespaceForPath(string path)
-        {
-            return GetNamespaceForPath(path, true);
         }
 
         public static string AddNamespaceBefore(string nameSpace, string subNameSpace)

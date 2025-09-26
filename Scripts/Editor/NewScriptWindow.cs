@@ -719,10 +719,7 @@ public class NewScriptWindow : EditorWindow
         EditorGUILayout.BeginHorizontal();
         {
             EditorGUILayout.LabelField("Namespace", GUILayout.Width(kLabelWidth - 4));
-            string newPrefix = NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
-            EditorGUILayout.LabelField(newPrefix, GUILayout.Width(90));
-            if (newPrefix != m_ScriptPrescription.m_NamespacePrefix)
-                m_ScriptPrescription.m_NamespacePrefix = newPrefix;
+            EditorGUILayout.LabelField(m_ScriptPrescription.m_NamespacePrefix, GUILayout.Width(90));
 
             EditorGUILayout.LabelField(".", GUILayout.Width(7));
             m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
@@ -930,7 +927,12 @@ public class NewScriptWindow : EditorWindow
 
     private void UpdateNamespace()
     {
-        m_ScriptPrescription.m_NamespaceBody = NamespaceUtility.GetNamespaceForPath(m_Directory, false);
+        string newPrefix = NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
+        if (!string.Equals(newPrefix, m_ScriptPrescription.m_NamespacePrefix, StringComparison.Ordinal))
+            m_ScriptPrescription.m_NamespacePrefix = newPrefix;
+        
+        m_ScriptPrescription.m_NamespaceBody = NamespaceUtility.GetNamespaceForPath(
+            m_Directory, m_ScriptPrescription.m_NamespacePrefix);
     }
 
     private void OnSelectionChange()

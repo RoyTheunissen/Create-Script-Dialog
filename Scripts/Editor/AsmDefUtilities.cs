@@ -303,5 +303,22 @@ namespace UnityEditor
             File.WriteAllText(dummyFilePath, sb.ToString());
             AssetDatabase.ImportAsset(dummyFilePath, ImportAssetOptions.ForceSynchronousImport);
         }
+
+        public static string GetRootNamespace(this AssemblyDefinitionAsset assemblyDefinitionAsset)
+        {
+            string text = assemblyDefinitionAsset.text;
+            const string rootNamespaceStartText = "rootNamespace\": \"";
+            int rootNamespaceStartIndex = text.IndexOf(rootNamespaceStartText, StringComparison.Ordinal);
+            if (rootNamespaceStartIndex == -1)
+                return string.Empty;
+
+            rootNamespaceStartIndex += rootNamespaceStartText.Length;
+
+            int rootNamespaceEndIndex = text.IndexOf("\"", rootNamespaceStartIndex, StringComparison.Ordinal);
+            if (rootNamespaceEndIndex == -1)
+                return string.Empty;
+
+            return text.Substring(rootNamespaceStartIndex, rootNamespaceEndIndex - rootNamespaceStartIndex);
+        }
     }
 }
