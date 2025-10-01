@@ -20,13 +20,10 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         /// <summary>
         /// The maximum namespace depth according to coding guidelines.
-        /// Currently we've settled upon 3 so you can have Paladin.System.Audio
-        /// and we don't differentiate between code that's any more specific than that.
         /// </summary>
-        private const int DefaultMaxNameSpaceDepth = 4;
+        private const int DefaultMaxNameSpaceDepth = 3;
 
-
-        public static string GetNamespaceForPath(string path, string prefixToStripWhenInferring = null)
+        public static string GetNamespaceForPath(string path, out bool shouldOverrideCompanyPrefix)
         {
             path = path.Replace(PathUtility.FolderSymbol, PathUtility.AlternateFolderSymbol);
 
