@@ -11,6 +11,7 @@ namespace UnityEditor
 	internal class ScriptPrescription
 	{
 		public string m_ClassName = string.Empty;
+		public bool m_NamespaceApplyPrefix = true;
         public string m_NamespacePrefix = string.Empty;
         public string m_NamespaceBody = string.Empty;
         public string m_Template;

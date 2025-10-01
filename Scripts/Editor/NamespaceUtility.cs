@@ -25,6 +25,8 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         public static string GetNamespaceForPath(string path, out bool shouldOverrideCompanyPrefix)
         {
+            shouldOverrideCompanyPrefix = false;
+            
             path = path.Replace(PathUtility.FolderSymbol, PathUtility.AlternateFolderSymbol);
 
             const string AssetsPrefix = "Assets/";
@@ -42,12 +44,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
                     string rootNamespace = assemblyDefinition.GetRootNamespace();
                     if (!string.IsNullOrEmpty(rootNamespace))
                     {
-                        if (!string.IsNullOrEmpty(prefixToStripWhenInferring))
-                        {
-                            rootNamespace = PathUtility.RemovePathUpUntil(
-                                rootNamespace, prefixToStripWhenInferring + ".");
-                        }
-                        
+                        shouldOverrideCompanyPrefix = true;
                         return rootNamespace;
                     }
                 }

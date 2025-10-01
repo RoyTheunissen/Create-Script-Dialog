@@ -715,16 +715,24 @@ public class NewScriptWindow : EditorWindow
     private void NamespaceGUI()
     {
         // Name space prefix and body fields.
-        GUI.SetNextControlName("ScriptNamespaceField");
-        EditorGUILayout.BeginHorizontal();
+        if (m_ScriptPrescription.m_NamespaceApplyPrefix)
         {
-            EditorGUILayout.LabelField("Namespace", GUILayout.Width(kLabelWidth - 4));
-            EditorGUILayout.LabelField(m_ScriptPrescription.m_NamespacePrefix, GUILayout.Width(90));
+            EditorGUILayout.BeginHorizontal();
+            {
+                EditorGUILayout.LabelField("Namespace", GUILayout.Width(kLabelWidth - 4));
+                EditorGUILayout.LabelField(m_ScriptPrescription.m_NamespacePrefix, GUILayout.Width(90));
 
-            EditorGUILayout.LabelField(".", GUILayout.Width(7));
-            m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
+                EditorGUILayout.LabelField(".", GUILayout.Width(7));
+                m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
+            }
+            EditorGUILayout.EndHorizontal();
         }
-        EditorGUILayout.EndHorizontal();
+        else
+        {
+            m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField("Namespace", m_ScriptPrescription.m_NamespaceBody);
+        }
+        m_ScriptPrescription.m_NamespaceApplyPrefix = EditorGUILayout.Toggle(
+            "Apply Prefix", m_ScriptPrescription.m_NamespaceApplyPrefix);
     }
 
     private void PreviewGUI()
@@ -930,9 +938,12 @@ public class NewScriptWindow : EditorWindow
         string newPrefix = NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
         if (!string.Equals(newPrefix, m_ScriptPrescription.m_NamespacePrefix, StringComparison.Ordinal))
             m_ScriptPrescription.m_NamespacePrefix = newPrefix;
+
+        string inferredNamespace = NamespaceUtility.GetNamespaceForPath(
+            m_Directory, out bool shouldOverrideCompanyPrefix);
         
-        m_ScriptPrescription.m_NamespaceBody = NamespaceUtility.GetNamespaceForPath(
-            m_Directory, m_ScriptPrescription.m_NamespacePrefix);
+        m_ScriptPrescription.m_NamespaceApplyPrefix = !shouldOverrideCompanyPrefix;
+        m_ScriptPrescription.m_NamespaceBody = inferredNamespace;
     }
 
     private void OnSelectionChange()
