@@ -2,7 +2,7 @@ using System;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
-    public static class PathUtility
+    internal static class PathUtility
     {
         public const char FolderSymbol = '\\';
         public const char AlternateFolderSymbol = '/';

@@ -12,7 +12,7 @@ namespace UnityEditor
     /// <summary>
     /// Contains useful utilities for organizing asmdefs.
     /// </summary>
-    public static class AsmDefUtilities 
+    internal static class AsmDefUtilities 
     {
         private const char Separator = '.';
         

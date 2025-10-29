@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
-    public static class NamespaceUtility
+    internal static class NamespaceUtility
     {
         private const string ProjectRootPath = @"Assets/";
         private const string ScriptsFolderPath = @"Scripts";

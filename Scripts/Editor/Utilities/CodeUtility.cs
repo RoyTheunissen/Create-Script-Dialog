@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RoyTheunissen.CreateScriptDialog.Utilities
 {
-    public static class CodeUtility
+    internal static class CodeUtility
     {
         public const string CodeExtension = ".cs";
 
@@ -27,45 +27,6 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         public static int GetIndexOfEarliestDeclaration(string contents)
         {
             return contents.IndexOfAny(DeclarationWords);
-        }
-
-        public static string Indent(string text, int numberOfIndentations, int fromIndex, int toIndex, bool skipFirstLine)
-        {
-            // Divide the text into the regions that should and should not be modified.
-            string before = text.Substring(0, fromIndex);
-            string middle = text.Substring(fromIndex, (toIndex - fromIndex));
-            string after = text.Substring(toIndex);
-
-            // Modify the middle part.
-            string[] lines = middle.Split(new string[] { LineBreakSymbol }, StringSplitOptions.None);
-            for (int i = 0; i < lines.Length; i++)
-            {
-                // Skip the first line if we're told to.
-                if (skipFirstLine && i == 0)
-                    continue;
-
-                // Indent each line the specified number of times.
-                for (int j = 0; j < numberOfIndentations; j++)
-                    lines[i] = IndentationString + lines[i];
-            }
-            middle = string.Join(LineBreakSymbol.ToString(), lines);
-
-            return before + middle + after;
-        }
-
-        public static string Indent(string text, int numberOfIndentations, int fromIndex, int toIndex)
-        {
-            return Indent(text, numberOfIndentations, fromIndex, toIndex, false);
-        }
-
-        public static string Indent(string text, int numberOfIndentations, bool skipFirstLine)
-        {
-            return Indent(text, numberOfIndentations, 0, text.Length, skipFirstLine);
-        }
-
-        public static string Indent(string text, int numberOfIndentations)
-        {
-            return Indent(text, numberOfIndentations, 0, text.Length, false);
         }
 
         /// <summary>

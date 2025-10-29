@@ -1,9 +1,7 @@
 {
     "name": "RoyTheunissen.CreateScriptDialog.Editor",
     "rootNamespace": "",
-    "references": [
-        "GUID:2741bdb3b3202e946b1704f9e26498b8"
-    ],
+    "references": [],
     "includePlatforms": [
         "Editor"
     ],
