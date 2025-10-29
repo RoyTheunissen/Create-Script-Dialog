@@ -11,6 +11,7 @@ using Object = UnityEngine.Object;
 
 public class NewScriptWindow : EditorWindow
 {
+    private const float kSidePanelWidth = 480f;
     private const int kButtonWidth = 120;
     private const int kLabelWidth = 85;
     private const string kLanguageEditorPrefName = "NewScriptLanguage";
@@ -409,6 +410,9 @@ public class NewScriptWindow : EditorWindow
 
     private string extension => "cs";
 
+    private static readonly EditorPreferenceString namespacePrefixEditorPref = new(
+        kNamespacePrefixPrefName, string.Empty);
+
     [MenuItem("Assets/Create/Script...", false, 50)]
     private static void OpenFromAssetsMenu()
     {
@@ -432,7 +436,6 @@ public class NewScriptWindow : EditorWindow
 
     private void OnEnable()
     {
-        m_ScriptPrescription.m_NamespacePrefix = EditorPrefs.GetString(kNamespacePrefixPrefName, string.Empty);
         UpdateTemplateNamesAndTemplate();
 
         isInitialOpen = true;
@@ -720,7 +723,10 @@ public class NewScriptWindow : EditorWindow
             EditorGUILayout.BeginHorizontal();
             {
                 EditorGUILayout.LabelField("Namespace", GUILayout.Width(kLabelWidth - 4));
-                EditorGUILayout.LabelField(m_ScriptPrescription.m_NamespacePrefix, GUILayout.Width(90));
+                const float prefixWidth = 120;
+                namespacePrefixEditorPref.Value = EditorGUILayout.TextField(
+                    namespacePrefixEditorPref.Value, GUILayout.Width(prefixWidth));
+                m_ScriptPrescription.m_NamespacePrefix = namespacePrefixEditorPref.Value;
 
                 EditorGUILayout.LabelField(".", GUILayout.Width(7));
                 m_ScriptPrescription.m_NamespaceBody = EditorGUILayout.TextField(m_ScriptPrescription.m_NamespaceBody);
@@ -737,7 +743,7 @@ public class NewScriptWindow : EditorWindow
 
     private void PreviewGUI()
     {
-        EditorGUILayout.BeginVertical(GUILayout.Width(Mathf.Max(position.width * 0.4f, position.width - 380f)));
+        EditorGUILayout.BeginVertical(GUILayout.Width(Mathf.Max(position.width * 0.4f, position.width - kSidePanelWidth)));
         {
             // Reserve room for preview title
             Rect previewHeaderRect = GUILayoutUtility.GetRect(new GUIContent("Preview"), m_Styles.m_PreviewTitle);
@@ -935,7 +941,14 @@ public class NewScriptWindow : EditorWindow
 
     private void UpdateNamespace()
     {
-        string newPrefix = NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
+        // If no namespace is defined for this project, determine one based on the company name.
+        if (string.IsNullOrEmpty(namespacePrefixEditorPref.Value))
+        {
+            namespacePrefixEditorPref.Value =
+                NamespaceUtility.ConvertFolderPathToSubNamespaces(PlayerSettings.companyName);
+        }
+
+        string newPrefix = namespacePrefixEditorPref.Value;
         if (!string.Equals(newPrefix, m_ScriptPrescription.m_NamespacePrefix, StringComparison.Ordinal))
             m_ScriptPrescription.m_NamespacePrefix = newPrefix;
 
