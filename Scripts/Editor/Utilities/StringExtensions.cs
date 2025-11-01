@@ -650,13 +650,17 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
         
         public static string Indent(this string text, int numberOfIndentations, int fromIndex, int toIndex, bool skipFirstLine)
         {
+            // NOTE: I've found that it's best to split up by \n and not by \r\n. \n will work regardless of the
+            // line endings. I've actually found it not working sometimes if we don't use \n here.
+            const string lineBreak = "\n";
+            
             // Divide the text into the regions that should and should not be modified.
             string before = text.Substring(0, fromIndex);
             string middle = text.Substring(fromIndex, (toIndex - fromIndex));
             string after = text.Substring(toIndex);
 
             // Modify the middle part.
-            string[] lines = middle.Split(new string[] { LineBreakSymbol }, StringSplitOptions.None);
+            string[] lines = middle.Split(new string[] { lineBreak }, StringSplitOptions.None);
             for (int i = 0; i < lines.Length; i++)
             {
                 // Skip the first line if we're told to.
@@ -667,7 +671,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
                 for (int j = 0; j < numberOfIndentations; j++)
                     lines[i] = IndentationString + lines[i];
             }
-            middle = string.Join(LineBreakSymbol.ToString(), lines);
+            middle = string.Join(lineBreak, lines);
 
             return before + middle + after;
         }
