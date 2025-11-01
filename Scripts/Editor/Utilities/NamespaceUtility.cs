@@ -18,12 +18,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
         private const string ImplementationSubnamespace = "Implementation";
 
-        /// <summary>
-        /// The maximum namespace depth according to coding guidelines.
-        /// </summary>
-        private const int DefaultMaxNameSpaceDepth = 3;
-
-        public static string GetNamespaceForPath(string path, out bool shouldOverrideCompanyPrefix)
+        public static string GetNamespaceForPath(string path, int maxDepth, out bool shouldOverrideCompanyPrefix)
         {
             shouldOverrideCompanyPrefix = false;
             
@@ -79,7 +74,7 @@ namespace RoyTheunissen.CreateScriptDialog.Utilities
 
             // Figure out how deep namespaces should go. If the company prefix is omitted,
             // the first section is already a subnamespace.
-            int depth = DefaultMaxNameSpaceDepth;
+            int depth = maxDepth;
 
             // Clamp the namespace to the specified depth.
             result = ClampNamespaceDepth(result, depth);

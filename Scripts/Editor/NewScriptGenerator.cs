@@ -47,19 +47,26 @@ namespace UnityEditor
             get
             {
                 string line = "namespace ";
+
+                bool hasBody = !string.IsNullOrEmpty(m_ScriptPrescription.m_NamespaceBody);
                 
                 if (m_ScriptPrescription.m_NamespaceApplyPrefix)
                 {
 	                if (string.IsNullOrEmpty(m_ScriptPrescription.m_NamespacePrefix))
-						line += "Company.";
+						line += "Company";
 	                else
-		                line += m_ScriptPrescription.m_NamespacePrefix + ".";
+		                line += m_ScriptPrescription.m_NamespacePrefix;
+
+	                if (hasBody)
+		                line += ".";
+                }
+                else if (!hasBody)
+                {
+	                line += "Example";
                 }
                 
-                if (!string.IsNullOrEmpty(m_ScriptPrescription.m_NamespaceBody))
+                if (hasBody)
 	                line += m_ScriptPrescription.m_NamespaceBody;
-                else
-	                line += "Example";
 
                 return line;
             }

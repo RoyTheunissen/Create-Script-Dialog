@@ -16,6 +16,7 @@ public class NewScriptWindow : EditorWindow
     private const int kLabelWidth = 85;
     private const string kLanguageEditorPrefName = "NewScriptLanguage";
     private const string kNamespacePrefixPrefName = "NewScriptNamespacePrefix";
+    private const string kNamespaceMaxDepthPrefName = "NamespaceMaxDepth";
     private const string kTemplateFolderName = "SmartScriptTemplates";
     private const string kResourcesTemplatePath = "Resources/" + kTemplateFolderName;
     private const string kMonoBehaviourName = "MonoBehaviour";
@@ -35,6 +36,8 @@ public class NewScriptWindow : EditorWindow
         "protected",
         "public",
     };
+    
+    private const int kDefaultMaxNameSpaceDepth = 3;
 
     private ScriptPrescription m_ScriptPrescription;
     private string m_BaseClass;
@@ -412,6 +415,9 @@ public class NewScriptWindow : EditorWindow
 
     private static readonly EditorPreferenceString namespacePrefixEditorPref = new(
         kNamespacePrefixPrefName, string.Empty);
+    
+    private static readonly EditorPreferenceInt namespaceMaxDepthEditorPref = new(
+        kNamespaceMaxDepthPrefName, kDefaultMaxNameSpaceDepth);
 
     [MenuItem("Assets/Create/Script...", false, 50)]
     private static void OpenFromAssetsMenu()
@@ -739,6 +745,13 @@ public class NewScriptWindow : EditorWindow
         }
         m_ScriptPrescription.m_NamespaceApplyPrefix = EditorGUILayout.Toggle(
             "Apply Prefix", m_ScriptPrescription.m_NamespaceApplyPrefix);
+        
+        EditorGUI.BeginChangeCheck();
+        namespaceMaxDepthEditorPref.Value = Mathf.Max(
+            0, EditorGUILayout.IntField("Max Depth", namespaceMaxDepthEditorPref.Value));
+        bool didChangeMaxDepth = EditorGUI.EndChangeCheck();
+        if (didChangeMaxDepth)
+            UpdateNamespace();
     }
 
     private void PreviewGUI()
@@ -953,7 +966,7 @@ public class NewScriptWindow : EditorWindow
             m_ScriptPrescription.m_NamespacePrefix = newPrefix;
 
         string inferredNamespace = NamespaceUtility.GetNamespaceForPath(
-            m_Directory, out bool shouldOverrideCompanyPrefix);
+            m_Directory, namespaceMaxDepthEditorPref.Value, out bool shouldOverrideCompanyPrefix);
         
         m_ScriptPrescription.m_NamespaceApplyPrefix = !shouldOverrideCompanyPrefix;
         m_ScriptPrescription.m_NamespaceBody = inferredNamespace;
